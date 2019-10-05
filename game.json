@@ -1,0 +1,510 @@
+{
+	"width": 640,
+	"height": 360,
+	"fps": 60,
+	"main": "./script/main.js",
+	"assets": {
+		"main": {
+			"type": "script",
+			"path": "script/main.js",
+			"global": true
+		},
+		"tori": {
+			"type": "image",
+			"width": 128,
+			"height": 256,
+			"path": "image/tori.png"
+		},
+		"tori2": {
+			"type": "image",
+			"width": 128,
+			"height": 256,
+			"path": "image/tori2.png"
+		},
+		"tori3": {
+			"type": "image",
+			"width": 128,
+			"height": 256,
+			"path": "image/tori3.png"
+		},
+		"tori4": {
+			"type": "image",
+			"width": 128,
+			"height": 256,
+			"path": "image/tori4.png"
+		},
+		"Player": {
+			"type": "script",
+			"path": "script/component/Player.js",
+			"global": true
+		},
+		"GameSubScene": {
+			"type": "script",
+			"path": "script/scene/GameSubScene.js",
+			"global": true
+		},
+		"MainScene": {
+			"type": "script",
+			"path": "script/scene/MainScene.js",
+			"global": true
+		},
+		"SubScene": {
+			"type": "script",
+			"path": "script/scene/SubScene.js",
+			"global": true
+		},
+		"GameParameters": {
+			"type": "script",
+			"path": "script/util/GameParameters.js",
+			"global": true
+		},
+		"Util": {
+			"type": "script",
+			"path": "script/util/Util.js",
+			"global": true
+		},
+		"GameManager": {
+			"type": "script",
+			"path": "script/component/GameManager.js",
+			"global": true
+		},
+		"BeatAction": {
+			"type": "script",
+			"path": "script/score/BeatAction.js",
+			"global": true
+		},
+		"NonbiriTouringScore": {
+			"type": "script",
+			"path": "script/score/NonbiriTouringScore.js",
+			"global": true
+		},
+		"music1": {
+			"type": "audio",
+			"path": "audio/music1",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music10": {
+			"type": "audio",
+			"path": "audio/music10",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music11": {
+			"type": "audio",
+			"path": "audio/music11",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music12": {
+			"type": "audio",
+			"path": "audio/music12",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music13": {
+			"type": "audio",
+			"path": "audio/music13",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music14": {
+			"type": "audio",
+			"path": "audio/music14",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music15": {
+			"type": "audio",
+			"path": "audio/music15",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music16": {
+			"type": "audio",
+			"path": "audio/music16",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music17": {
+			"type": "audio",
+			"path": "audio/music17",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music18": {
+			"type": "audio",
+			"path": "audio/music18",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music19": {
+			"type": "audio",
+			"path": "audio/music19",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music2": {
+			"type": "audio",
+			"path": "audio/music2",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music20": {
+			"type": "audio",
+			"path": "audio/music20",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music21": {
+			"type": "audio",
+			"path": "audio/music21",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music22": {
+			"type": "audio",
+			"path": "audio/music22",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music23": {
+			"type": "audio",
+			"path": "audio/music23",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music24": {
+			"type": "audio",
+			"path": "audio/music24",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music25": {
+			"type": "audio",
+			"path": "audio/music25",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music26": {
+			"type": "audio",
+			"path": "audio/music26",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music27": {
+			"type": "audio",
+			"path": "audio/music27",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music28": {
+			"type": "audio",
+			"path": "audio/music28",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music29": {
+			"type": "audio",
+			"path": "audio/music29",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music3": {
+			"type": "audio",
+			"path": "audio/music3",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music30": {
+			"type": "audio",
+			"path": "audio/music30",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music31": {
+			"type": "audio",
+			"path": "audio/music31",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music32": {
+			"type": "audio",
+			"path": "audio/music32",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music33": {
+			"type": "audio",
+			"path": "audio/music33",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music34": {
+			"type": "audio",
+			"path": "audio/music34",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music35": {
+			"type": "audio",
+			"path": "audio/music35",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music36": {
+			"type": "audio",
+			"path": "audio/music36",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music37": {
+			"type": "audio",
+			"path": "audio/music37",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music38": {
+			"type": "audio",
+			"path": "audio/music38",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music39": {
+			"type": "audio",
+			"path": "audio/music39",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music4": {
+			"type": "audio",
+			"path": "audio/music4",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music40": {
+			"type": "audio",
+			"path": "audio/music40",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music41": {
+			"type": "audio",
+			"path": "audio/music41",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music42": {
+			"type": "audio",
+			"path": "audio/music42",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music43": {
+			"type": "audio",
+			"path": "audio/music43",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music44": {
+			"type": "audio",
+			"path": "audio/music44",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music45": {
+			"type": "audio",
+			"path": "audio/music45",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music46": {
+			"type": "audio",
+			"path": "audio/music46",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music47": {
+			"type": "audio",
+			"path": "audio/music47",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music48": {
+			"type": "audio",
+			"path": "audio/music48",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music49": {
+			"type": "audio",
+			"path": "audio/music49",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music5": {
+			"type": "audio",
+			"path": "audio/music5",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music6": {
+			"type": "audio",
+			"path": "audio/music6",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music7": {
+			"type": "audio",
+			"path": "audio/music7",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music8": {
+			"type": "audio",
+			"path": "audio/music8",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"music9": {
+			"type": "audio",
+			"path": "audio/music9",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"peta1": {
+			"type": "audio",
+			"path": "audio/peta1",
+			"systemId": "sound",
+			"duration": 57
+		},
+		"peta2": {
+			"type": "audio",
+			"path": "audio/peta2",
+			"systemId": "sound",
+			"duration": 49
+		},
+		"GestureHandler": {
+			"type": "script",
+			"path": "script/component/GestureHandler.js",
+			"global": true
+		},
+		"tori_jump1": {
+			"type": "image",
+			"width": 128,
+			"height": 256,
+			"path": "image/tori_jump1.png"
+		},
+		"tori_miss1": {
+			"type": "image",
+			"width": 128,
+			"height": 256,
+			"path": "image/tori_miss1.png"
+		},
+		"tori_tame1": {
+			"type": "image",
+			"width": 128,
+			"height": 256,
+			"path": "image/tori_tame1.png"
+		},
+		"don": {
+			"type": "audio",
+			"path": "audio/don",
+			"systemId": "sound",
+			"duration": 489
+		},
+		"miss": {
+			"type": "audio",
+			"path": "audio/miss",
+			"systemId": "sound",
+			"duration": 785
+		},
+		"numa_head": {
+			"type": "audio",
+			"path": "audio/numa_head",
+			"systemId": "sound",
+			"duration": 1296
+		},
+		"numa_tail": {
+			"type": "audio",
+			"path": "audio/numa_tail",
+			"systemId": "sound",
+			"duration": 443
+		},
+		"pi": {
+			"type": "audio",
+			"path": "audio/pi",
+			"systemId": "sound",
+			"duration": 199
+		},
+		"TitleSubScene": {
+			"type": "script",
+			"path": "script/scene/TitleSubScene.js",
+			"global": true
+		},
+		"opening": {
+			"type": "audio",
+			"path": "audio/opening",
+			"systemId": "sound",
+			"duration": 6009
+		},
+		"TeachingTap": {
+			"type": "script",
+			"path": "script/component/TeachingTap.js",
+			"global": true
+		},
+		"TeachingSlide": {
+			"type": "script",
+			"path": "script/component/TeachingSlide.js",
+			"global": true
+		},
+		"WaitingRoomSubScene": {
+			"type": "script",
+			"path": "script/scene/WaitingRoomSubScene.js",
+			"global": true
+		},
+		"RoundedFilledRect": {
+			"type": "script",
+			"path": "script/component/RoundedFilledRect.js",
+			"global": true
+		},
+		"PlayerJoiningManager": {
+			"type": "script",
+			"path": "script/component/PlayerJoiningManager.js",
+			"global": true
+		},
+		"JoinButton": {
+			"type": "script",
+			"path": "script/component/JoinButton.js",
+			"global": true
+		},
+		"Messenger": {
+			"type": "script",
+			"path": "script/component/Messenger.js",
+			"global": true
+		},
+		"StopJoinButton": {
+			"type": "script",
+			"path": "script/component/StopJoinButton.js",
+			"global": true
+		}
+	},
+	"environment": {
+		"sandbox-runtime": "2",
+		"niconico": {
+			"supportedModes": [
+				"single"
+			]
+		}
+	},
+	"globalScripts": [
+		"node_modules/@akashic-extension/akashic-timeline/lib/ActionType.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Easing.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Timeline.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/Tween.js",
+		"node_modules/@akashic-extension/akashic-timeline/lib/index.js"
+	],
+	"moduleMainScripts": {
+		"@akashic-extension/akashic-timeline": "node_modules/@akashic-extension/akashic-timeline/lib/index.js"
+	}
+}
