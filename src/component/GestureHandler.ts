@@ -40,7 +40,7 @@ export class GestureHandler extends g.E {
         this.currentTempGesture = null;
         this.lastGesture = Gesture.Tap;
         this.onTap.fire();
-        console.log('tap');
+        // console.log('tap');
       }
     }, 100);
   }
@@ -49,7 +49,7 @@ export class GestureHandler extends g.E {
     if (this.currentTempGesture === Gesture.Tap) {
       this.lastGesture = Gesture.Tap;
       this.onTap.fire();
-      console.log('tap in pointup');
+      // console.log('tap in pointup');
     }
     if (this.lastGesture === Gesture.SlideDown || this.lastGesture === Gesture.SlideUp) {
       this.lastGesture = null;
@@ -58,7 +58,7 @@ export class GestureHandler extends g.E {
     this.currentTempGesture = null;
     this.lastGesture = null;
     this.onTapUp.fire();
-    console.log('tapup');
+    // console.log('tapup');
   }
 
   private onPointMove(event: g.PointMoveEvent) {
@@ -66,12 +66,12 @@ export class GestureHandler extends g.E {
     if (
       this.lastGesture !== Gesture.SlideDown &&
       this.lastGesture !== Gesture.SlideUp &&
-      event.startDelta.y > 20
+      event.startDelta.y > 10
     ) {
       this.currentTempGesture = null;
       this.lastGesture = Gesture.SlideDown;
       this.onSlideDown.fire();
-      console.log('slidedown');
+      // console.log('slidedown');
     } else if (
       this.lastGesture === Gesture.SlideDown &&
       event.prevDelta.y < -5
@@ -79,7 +79,7 @@ export class GestureHandler extends g.E {
       this.currentTempGesture = null;
       this.lastGesture = Gesture.SlideUp;
       this.onSlideUp.fire();
-      console.log('slideup');
+      // console.log('slideup');
     }
   }
 }

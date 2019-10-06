@@ -4,6 +4,7 @@ import {BeatActionStatus, GameManager, UserAction} from '../component/GameManage
 import {GestureHandler} from '../component/GestureHandler';
 import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
 import {Messenger} from '../component/Messenger';
+import {Timeline} from '@akashic-extension/akashic-timeline';
 
 export interface GameResult {
   score: number;
@@ -13,8 +14,12 @@ export class GameSubScene extends SubScene {
   private players: {[playerId: string]: Player} = {};
   private manager: GameManager;
   private actionResultLabel: g.Label;
+  private background: g.Sprite;
+  private playersLayer: g.E;
   private gestureHandler: GestureHandler;
   private messenger: Messenger;
+  private timeline: Timeline;
+  private fadeOutOverlay: g.FilledRect;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -22,6 +27,7 @@ export class GameSubScene extends SubScene {
   }
 
   init() {
+    this.timeline = new Timeline(this.scene);
     this.manager = new GameManager({
       scene: this.scene
     });
@@ -34,6 +40,14 @@ export class GameSubScene extends SubScene {
         size: 15
       }),
       fontSize: 30
+    });
+    this.background = new g.Sprite({
+      scene: this.scene,
+      src: this.scene.assets['sougen'],
+      opacity: 0.35
+    });
+    this.playersLayer = new g.E({
+      scene: this.scene
     });
     this.gestureHandler = new GestureHandler({
       scene: this.scene
@@ -57,8 +71,18 @@ export class GameSubScene extends SubScene {
       this.manager.action(UserAction.SlideUp);
       this.messenger.send('slideUp', {playerId: g.game.selfId});
     });
+    this.fadeOutOverlay = new g.FilledRect({
+      scene: this.scene,
+      cssColor: '#ffffff',
+      width: this.scene.game.width,
+      height: this.scene.game.height,
+      opacity: 0
+    });
+    this.append(this.background);
     this.append(this.manager);
+    this.append(this.playersLayer);
     this.append(this.actionResultLabel);
+    this.append(this.fadeOutOverlay);
     this.append(this.gestureHandler);
     this.hideContent();
     this.messenger.onReceive('tap', (event) => {
@@ -128,6 +152,10 @@ export class GameSubScene extends SubScene {
       }
       this.actionResultLabel.invalidate();
     });
+    this.manager.onLastSomeMeasures.add(event => {
+      this.timeline.create(this.fadeOutOverlay, {modified: this.fadeOutOverlay.modified, destroyed: this.fadeOutOverlay.destroyed})
+        .to({opacity: 1}, 1000 * event.age / g.game.fps - 2000);
+    });
     this.messenger.onReceive('miss', (event) => {
       const targetPlayer = this.players[event.playerId];
       if (!targetPlayer) {
@@ -147,16 +175,16 @@ export class GameSubScene extends SubScene {
         y: 100
       });
       this.players[p.id] = player;
-      this.append(player);
+      this.playersLayer.append(player);
     });
   }
 
   showContent() {
-    Object.keys(this.players).forEach(k => {
-      this.players[k].show();
-    });
+    this.background.show();
+    this.playersLayer.show();
     this.manager.show();
     this.gestureHandler.show();
+    this.fadeOutOverlay.show();
   }
 
   startContent() {
@@ -172,10 +200,10 @@ export class GameSubScene extends SubScene {
   }
 
   hideContent() {
-    Object.keys(this.players).forEach(k => {
-      this.players[k].hide();
-    });
+    this.background.hide();
+    this.playersLayer.hide();
     this.manager.hide();
     this.gestureHandler.hide();
+    this.fadeOutOverlay.hide();
   }
 }

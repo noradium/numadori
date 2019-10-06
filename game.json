@@ -423,7 +423,7 @@
 			"type": "audio",
 			"path": "audio/numa_head",
 			"systemId": "sound",
-			"duration": 1319
+			"duration": 1400
 		},
 		"numa_tail": {
 			"type": "audio",
@@ -487,6 +487,12 @@
 			"type": "script",
 			"path": "script/component/StopJoinButton.js",
 			"global": true
+		},
+		"sougen": {
+			"type": "image",
+			"width": 1360,
+			"height": 768,
+			"path": "image/sougen.jpg"
 		}
 	},
 	"environment": {

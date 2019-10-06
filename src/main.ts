@@ -6,7 +6,7 @@ function main(param: g.GameMainParameterObject): void {
     game: g.game,
     assetIds: [
       'opening',
-      'tori', 'tori2', 'tori3', 'tori4', 'tori_tame1', 'tori_jump1', 'tori_miss1',
+      'tori', 'tori2', 'tori3', 'tori4', 'tori_tame1', 'tori_jump1', 'tori_miss1', 'sougen',
       'music1', 'music2', 'music3', 'music4', 'music5', 'music6', 'music7', 'music8', 'music9', 'music10',
       'music11', 'music12', 'music13', 'music14', 'music15', 'music16', 'music17', 'music18', 'music19', 'music20',
       'music21', 'music22', 'music23', 'music24', 'music25', 'music26', 'music27', 'music28', 'music29', 'music30',
