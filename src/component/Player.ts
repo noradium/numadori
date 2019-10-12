@@ -1,4 +1,5 @@
 import {Util} from '../util/Util';
+import {Easing, Timeline} from '@akashic-extension/akashic-timeline';
 
 export class Player extends g.E {
   private tori1: g.Sprite;
@@ -12,13 +13,17 @@ export class Player extends g.E {
   private meLabel: g.Label;
   private _currentStep: number;
   private disableSound: boolean;
+  private timeline: Timeline;
+  private highTopY: number;
+  private topY: number;
+  private bottomY: number;
 
   constructor(params: {
     scene: g.Scene;
     id?: string;
     name?: string;
-    x?: number;
-    y?: number;
+    x: number;
+    y: number;
     disableSound?: boolean;
     isMe?: boolean;
   }) {
@@ -27,6 +32,10 @@ export class Player extends g.E {
       x: params.x,
       y: params.y
     });
+    this.timeline = new Timeline(params.scene);
+    this.highTopY = params.y - 10;
+    this.topY = params.y;
+    this.bottomY = params.y + 3;
     this.disableSound = params.disableSound;
     this.tori1 = new g.Sprite({
       scene: params.scene,
@@ -108,6 +117,12 @@ export class Player extends g.E {
     return this._currentStep;
   }
 
+  actionCount() {
+    this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
+      .moveY(this.bottomY, 100, Easing.easeInOutExpo)
+      .moveY(this.topY, 100, Easing.easeInOutExpo);
+  }
+
   setStep1() {
     this._currentStep = 1;
     this.tori1.show();
@@ -121,6 +136,8 @@ export class Player extends g.E {
       Util.playAudio(this.scene, 'peta1');
       Util.playAudio(this.scene, 'don');
     }
+    this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
+      .moveY(this.bottomY, 100, Easing.easeInOutExpo);
   }
 
   setStep2() {
@@ -135,6 +152,8 @@ export class Player extends g.E {
     if (!this.disableSound) {
       Util.playAudio(this.scene, 'peta2');
     }
+    this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
+      .moveY(this.topY, 100, Easing.easeInOutExpo);
   }
 
   setStep3() {
@@ -150,6 +169,8 @@ export class Player extends g.E {
       Util.playAudio(this.scene, 'peta1');
       Util.playAudio(this.scene, 'don');
     }
+    this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
+      .moveY(this.bottomY, 100, Easing.easeInOutExpo);
   }
 
   setStep4() {
@@ -164,6 +185,8 @@ export class Player extends g.E {
     if (!this.disableSound) {
       Util.playAudio(this.scene, 'peta2');
     }
+    this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
+      .moveY(this.topY, 100, Easing.easeInOutExpo);
   }
 
   setTame() {
@@ -174,6 +197,8 @@ export class Player extends g.E {
     this.tori_tame1.show();
     this.tori_jump1.hide();
     this.tori_miss1.hide();
+    this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
+      .moveY(this.bottomY, 50, Easing.easeInOutExpo);
   }
 
   setJump() {
@@ -187,6 +212,9 @@ export class Player extends g.E {
     if (!this.disableSound) {
       Util.playAudio(this.scene, 'numa_tail');
     }
+    this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
+      .moveY(this.highTopY, 300, Easing.easeInOutExpo)
+      .moveY(this.topY, 60, Easing.easeInOutExpo);
   }
 
   setMiss() {

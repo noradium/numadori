@@ -44,10 +44,6 @@ export class TeachingTap extends g.E {
       }),
       fontSize: 60
     });
-    this.tori = new Player({
-      scene: this.scene,
-      disableSound: true
-    });
 
     // 一番長いのをコンテナの幅に
     this.width = this.text1.width;
@@ -57,7 +53,13 @@ export class TeachingTap extends g.E {
     this.text2.x = (this.width - this.text2.width) / 2;
     this.yubi.y = this.text2.y + this.text2.height;
     this.yubi.x = (this.width - this.yubi.width) / 2;
-    this.tori.y = this.yubi.y + this.yubi.height - 30;
+
+    this.tori = new Player({
+      scene: this.scene,
+      disableSound: true,
+      x: 0,
+      y: this.yubi.y + this.yubi.height - 30
+    });
 
     this.append(this.tori);
     this.append(this.text1);

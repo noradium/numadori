@@ -132,10 +132,16 @@ export class GameSubScene extends SubScene {
       }
       targetPlayer.setJump();
     });
-    this.manager.onLastCount.add(() => {
-      Object.keys(this.players).forEach(k => {
-        this.players[k].setStep4();
-      });
+    this.manager.onCount.add((event) => {
+      if (event.isLast) {
+        Object.keys(this.players).forEach(k => {
+          this.players[k].setStep4();
+        });
+      } else {
+        Object.keys(this.players).forEach(k => {
+          this.players[k].actionCount();
+        });
+      }
     });
     this.manager.onBeatActionStatusFixed.add(event => {
       // local

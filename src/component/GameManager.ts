@@ -25,9 +25,9 @@ export class GameManager extends g.E {
    */
   readonly onBeatActionStatusFixed: g.Trigger<{status: BeatActionStatus}>;
   /**
-   * 曲が始まる前のカウントの最後の拍を打ったときに発火
+   * 曲が始まる前のカウントの拍を打ったときに発火
    */
-  readonly onLastCount: g.Trigger<void>;
+  readonly onCount: g.Trigger<{isLast: boolean}>;
   readonly onLastSomeMeasures: g.Trigger<{age: number}>;
   /**
    * ※ B-B: 1拍の長さ
@@ -55,7 +55,7 @@ export class GameManager extends g.E {
     });
     this.onBeat = new g.Trigger<{action: BeatAction}>();
     this.onBeatActionStatusFixed = new g.Trigger<{status: BeatActionStatus}>();
-    this.onLastCount = new g.Trigger();
+    this.onCount = new g.Trigger();
     this.onLastSomeMeasures = new g.Trigger();
     this.update.add(this.onUpdate.bind(this));
   }
@@ -198,10 +198,11 @@ export class GameManager extends g.E {
             }
             if (beatAction === BeatAction.Count) {
               Util.playAudio(this.scene, 'pi');
+              this.onCount.fire({isLast: false});
             }
             if (beatAction === BeatAction.LastCount) {
               Util.playAudio(this.scene, 'pi');
-              this.onLastCount.fire();
+              this.onCount.fire({isLast: true});
             }
             if (beatAction === BeatAction.PiPyako) {
               Util.playAudio(this.scene, 'numa_head');
