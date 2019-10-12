@@ -3,17 +3,19 @@ import {SubScene} from './SubScene';
 // import {TitleSubScene} from './TitleSubScene';
 import {GameParameters, LaunchType, SessionParameters} from '../util/GameParameters';
 // import {GameOverSubScene} from './GameOverSubScene';
-import {Util} from '../util/Util';
-import {GameSubScene} from './GameSubScene';
+import {GameResult, GameSubScene} from './GameSubScene';
 import {TitleSubScene} from './TitleSubScene';
 import {WaitingRoomSubScene} from './WaitingRoomSubScene';
 import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
+import {ResultSubScene} from './ResultSubScene';
+import {BeatActionStatus} from '../component/GameManager';
 
 export class MainScene extends g.Scene {
   private currentSubScene: SubScene;
   private titleSubScene: TitleSubScene;
   private gameSubScene: GameSubScene;
   private waitingRoomSubScene: WaitingRoomSubScene;
+  private resultSubScene: ResultSubScene;
   private gameParameters: SessionParameters;
   private playerJoiningManager: PlayerJoiningManager;
 
@@ -67,14 +69,24 @@ export class MainScene extends g.Scene {
     this.titleSubScene.onTitleSceneEnd.add(() => this.onTitleSceneEnd());
     this.append(this.titleSubScene);
 
-    this.gameSubScene = new GameSubScene(this, this.playerJoiningManager);
-    this.gameSubScene.init();
-    this.append(this.gameSubScene);
-
     this.waitingRoomSubScene = new WaitingRoomSubScene(this, this.playerJoiningManager);
     this.waitingRoomSubScene.init();
     this.waitingRoomSubScene.onSceneEnd.add(() => this.onWaitingRoomSceneEnd());
     this.append(this.waitingRoomSubScene);
+
+    this.gameSubScene = new GameSubScene(this, this.playerJoiningManager);
+    this.gameSubScene.init();
+    this.gameSubScene.onGameEnd.add(event => this.onGameEnd(event));
+    this.append(this.gameSubScene);
+
+    this.resultSubScene = new ResultSubScene(this);
+    this.resultSubScene.init();
+    this.append(this.resultSubScene);
+
+    // this.resultSubScene.setResult([BeatActionStatus.Waiting, BeatActionStatus.Waiting, BeatActionStatus.Great, BeatActionStatus.Great, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Fail]);
+    // this.changeSubscene(this.resultSubScene);
+    // this.playerJoiningManager.join();
+    // this.changeSubscene(this.gameSubScene);
 
     this.playerJoiningManager.onPlayerJoin.addOnce(() => {
       console.log('main join');
@@ -104,20 +116,10 @@ export class MainScene extends g.Scene {
     this.currentSubScene.startContent();
   }
 
-  // private onGameEnd(event: GameResult) {
-  //   g.game.vars.gameState.score = event.score;
-  //   this.gameOverSubScene.setScore({
-  //     score: event.score
-  //   });
-  //   this.changeSubscene(this.gameOverSubScene);
-  //   const savePromise = Util.saveScore(event.mode, event.score);
-  //   if (savePromise) {
-  //     savePromise.then(() => {
-  //       Util.showScoreboard(event.mode);
-  //     });
-  //   }
-  //   Util.logPointDownElapsedTimeAverage(event.pointDownElapsedTimeAverage);
-  // }
+  private onGameEnd(event: GameResult) {
+    this.resultSubScene.setResult(event.states);
+    this.changeSubscene(this.resultSubScene);
+  }
 
   private onTitleSceneEnd() {
     this.changeSubscene(this.waitingRoomSubScene);

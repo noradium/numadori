@@ -9,6 +9,7 @@ export class Player extends g.E {
   private tori_jump1: g.Sprite;
   private tori_miss1: g.Sprite;
   private nameLabel: g.Label;
+  private meLabel: g.Label;
   private _currentStep: number;
   private disableSound: boolean;
 
@@ -19,6 +20,7 @@ export class Player extends g.E {
     x?: number;
     y?: number;
     disableSound?: boolean;
+    isMe?: boolean;
   }) {
     super({
       scene: params.scene,
@@ -79,6 +81,23 @@ export class Player extends g.E {
       this.nameLabel.x = (this.width - this.nameLabel.width) / 2;
       this.nameLabel.y = 0;
       this.append(this.nameLabel);
+    }
+
+    if (params.isMe) {
+      this.meLabel = new g.Label({
+        scene: this.scene,
+        text: 'あなた',
+        font: new g.DynamicFont({
+          game: g.game,
+          fontFamily: g.FontFamily.Serif,
+          size: 20
+        }),
+        fontSize: 20,
+        textColor: '#333'
+      });
+      this.meLabel.x = (this.width - this.meLabel.width) / 2;
+      this.meLabel.y = this.nameLabel ? -this.nameLabel.height : 0;
+      this.append(this.meLabel);
     }
 
     this.modified();

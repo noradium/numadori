@@ -114,10 +114,10 @@ export default {
       beatAction: [BeatAction.Normal, BeatAction.PiPyako, BeatAction.Normal, BeatAction.Normal]
     }, {
       assetId: 'music37',
-      beatAction: [BeatAction.Normal, BeatAction.Normal, BeatAction.Normal, BeatAction.PiPyako]
+      beatAction: [BeatAction.Normal, BeatAction.Normal, BeatAction.Normal, BeatAction.Normal]
     }, {
       assetId: 'music38',
-      beatAction: [BeatAction.Normal, BeatAction.Normal, BeatAction.PiPyako, BeatAction.Normal]
+      beatAction: [BeatAction.Normal, BeatAction.PiPyako, BeatAction.Normal, BeatAction.Normal]
     }, {
       assetId: 'music39',
       beatAction: [BeatAction.Normal, BeatAction.Normal, BeatAction.Normal, BeatAction.Normal]

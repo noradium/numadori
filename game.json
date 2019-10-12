@@ -488,11 +488,21 @@
 			"path": "script/component/StopJoinButton.js",
 			"global": true
 		},
-		"sougen": {
+		"ResultSubScene": {
+			"type": "script",
+			"path": "script/scene/ResultSubScene.js",
+			"global": true
+		},
+		"GameBackground": {
+			"type": "script",
+			"path": "script/component/GameBackground.js",
+			"global": true
+		},
+		"asiato": {
 			"type": "image",
-			"width": 1360,
-			"height": 768,
-			"path": "image/sougen.jpg"
+			"width": 68,
+			"height": 62,
+			"path": "image/asiato.png"
 		}
 	},
 	"environment": {

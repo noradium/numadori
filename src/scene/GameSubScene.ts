@@ -5,21 +5,25 @@ import {GestureHandler} from '../component/GestureHandler';
 import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
 import {Messenger} from '../component/Messenger';
 import {Timeline} from '@akashic-extension/akashic-timeline';
+import {GameBackground} from '../component/GameBackground';
+import {BeatAction} from '../score/BeatAction';
 
 export interface GameResult {
-  score: number;
+  states: BeatActionStatus[];
 }
 
 export class GameSubScene extends SubScene {
+  readonly onGameEnd: g.Trigger<GameResult> = new g.Trigger<GameResult>();
   private players: {[playerId: string]: Player} = {};
   private manager: GameManager;
   private actionResultLabel: g.Label;
-  private background: g.Sprite;
+  private background: GameBackground;
   private playersLayer: g.E;
   private gestureHandler: GestureHandler;
   private messenger: Messenger;
   private timeline: Timeline;
   private fadeOutOverlay: g.FilledRect;
+  private pipyakoCount = 0;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -41,10 +45,8 @@ export class GameSubScene extends SubScene {
       }),
       fontSize: 30
     });
-    this.background = new g.Sprite({
-      scene: this.scene,
-      src: this.scene.assets['sougen'],
-      opacity: 0.35
+    this.background = new GameBackground({
+      scene: this.scene
     });
     this.playersLayer = new g.E({
       scene: this.scene
@@ -73,7 +75,7 @@ export class GameSubScene extends SubScene {
     });
     this.fadeOutOverlay = new g.FilledRect({
       scene: this.scene,
-      cssColor: '#ffffff',
+      cssColor: '#000000',
       width: this.scene.game.width,
       height: this.scene.game.height,
       opacity: 0
@@ -81,7 +83,7 @@ export class GameSubScene extends SubScene {
     this.append(this.background);
     this.append(this.manager);
     this.append(this.playersLayer);
-    this.append(this.actionResultLabel);
+    // this.append(this.actionResultLabel);
     this.append(this.fadeOutOverlay);
     this.append(this.gestureHandler);
     this.hideContent();
@@ -154,7 +156,17 @@ export class GameSubScene extends SubScene {
     });
     this.manager.onLastSomeMeasures.add(event => {
       this.timeline.create(this.fadeOutOverlay, {modified: this.fadeOutOverlay.modified, destroyed: this.fadeOutOverlay.destroyed})
-        .to({opacity: 1}, 1000 * event.age / g.game.fps - 2000);
+        .to({opacity: 1}, 1000 * event.age / g.game.fps)
+        .wait(1500)
+        .call(() => {
+          this.onGameEnd.fire({
+            states: this.manager.getStates()
+          });
+        });
+    });
+    this.manager.onBeat.add(event => {
+      // beat
+      this.background.step(this.calculateStep(event.action));
     });
     this.messenger.onReceive('miss', (event) => {
       const targetPlayer = this.players[event.playerId];
@@ -172,7 +184,8 @@ export class GameSubScene extends SubScene {
         id: p.id,
         name: p.userName,
         x: 100 + index * 100,
-        y: 100
+        y: 100,
+        isMe: p.id === this.scene.game.selfId
       });
       this.players[p.id] = player;
       this.playersLayer.append(player);
@@ -205,5 +218,27 @@ export class GameSubScene extends SubScene {
     this.manager.hide();
     this.gestureHandler.hide();
     this.fadeOutOverlay.hide();
+  }
+
+  private calculateStep(beatAction: BeatAction) {
+    if (this.pipyakoCount > 0) {
+      this.pipyakoCount++;
+    }
+    if (beatAction === BeatAction.PiPyako) {
+      this.pipyakoCount = 1;
+      return 8;
+    }
+
+    if (this.pipyakoCount === 3) {
+      return 2;
+    }
+    if (this.pipyakoCount === 4) {
+      this.pipyakoCount = 0;
+      return 24;
+    }
+    if (beatAction === BeatAction.Normal) {
+      return 8;
+    }
+    return 0;
   }
 }

@@ -18,6 +18,7 @@ type Timeline = Array<{
 }>;
 
 export class GameManager extends g.E {
+  readonly onBeat: g.Trigger<{action: BeatAction}>;
   /**
    * 各拍ごとのアクションが成功したか失敗したか確定したタイミングでemitされます
    * プレイヤーのクリック起因、時間経過起因で発生
@@ -52,6 +53,7 @@ export class GameManager extends g.E {
       height: params.scene.game.height,
       local: true
     });
+    this.onBeat = new g.Trigger<{action: BeatAction}>();
     this.onBeatActionStatusFixed = new g.Trigger<{status: BeatActionStatus}>();
     this.onLastCount = new g.Trigger();
     this.onLastSomeMeasures = new g.Trigger();
@@ -94,6 +96,7 @@ export class GameManager extends g.E {
       if (this.timeline[this.currentTimelineIndex].systemAction) {
         this.timeline[this.currentTimelineIndex].systemAction();
       }
+      this.onBeat.fire({action: this.timeline[this.currentTimelineIndex].beatAction});
       // console.log('beat!', this.timeline[this.currentTimelineIndex]);
     }
   }
@@ -175,6 +178,10 @@ export class GameManager extends g.E {
     return nearestIndex % 4;
   }
 
+  getStates() {
+    return this.timeline.map(v => v.beatActionStatus);
+  }
+
   private initializeTimeline(score: typeof NonbiriTouringScore, startAge: number) {
     const timeline: Timeline = [];
     this.agePerBeat = 60 / score.bpm * this.scene.game.fps;
@@ -199,7 +206,7 @@ export class GameManager extends g.E {
             if (beatAction === BeatAction.PiPyako) {
               Util.playAudio(this.scene, 'numa_head');
             }
-            if (fi === score.fragments.length - 3) {
+            if (fi === score.fragments.length - 3 && bi === 0) {
               // 最後から3小節目
               this.onLastSomeMeasures.fire({
                 age: 3 * score.beat * this.agePerBeat
