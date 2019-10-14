@@ -8,6 +8,7 @@ import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
 import {JoinButton} from '../component/JoinButton';
 import {StopJoinButton} from '../component/StopJoinButton';
 import {Messenger} from '../component/Messenger';
+import {MediumBlack64pxLabel} from '../component/Label';
 
 export class WaitingRoomSubScene extends SubScene {
   readonly onSceneEnd = new g.Trigger<void>();
@@ -29,46 +30,31 @@ export class WaitingRoomSubScene extends SubScene {
   }
 
   init() {
-    this.titleLabel = new g.Label({
+    this.titleLabel = new MediumBlack64pxLabel({
       scene: this.scene,
-      text: '鳥の軍団',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 30
-      }),
+      text: '鳥の行進',
       fontSize: 30
     });
-    this.titleLabel.x = 0;
-    this.titleLabel.y = 0;
+    this.titleLabel.x = 5;
+    this.titleLabel.y = 5;
     this.append(this.titleLabel);
 
-    this.playerNumLabel = new g.Label({
+    this.playerNumLabel = new MediumBlack64pxLabel({
       scene: this.scene,
-      text: '参加人数　　　　人',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 30
-      }),
+      text: '参加人数      人',
       fontSize: 30
     });
-    this.playerNumLabel.x = g.game.width - this.playerNumLabel.width;
-    this.playerNumLabel.y = 0;
+    this.playerNumLabel.x = g.game.width - this.playerNumLabel.width - 5;
+    this.playerNumLabel.y = 5;
     this.append(this.playerNumLabel);
 
-    this.playerNumValueLabel = new g.Label({
+    this.playerNumValueLabel = new MediumBlack64pxLabel({
       scene: this.scene,
       text: '0',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 30
-      }),
       fontSize: 30
     });
-    this.playerNumValueLabel.x = g.game.width - 100;
-    this.playerNumValueLabel.y = 0;
+    this.playerNumValueLabel.x = g.game.width - 75 - this.playerNumValueLabel.width / 2;
+    this.playerNumValueLabel.y = this.playerNumLabel.y;
     this.append(this.playerNumValueLabel);
 
     this.teachingBackground = new RoundedFilledRect({
@@ -78,7 +64,9 @@ export class WaitingRoomSubScene extends SubScene {
       x: 20,
       y: 50,
       borderRadius: 20,
-      cssColor: '#f0fbff'
+      cssColor: '#f0fbff',
+      circleAssetId: 'lightblue_circle_32',
+      circleAssetSize: 32
     });
     this.append(this.teachingBackground);
 

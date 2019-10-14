@@ -1,5 +1,6 @@
 import {Player} from './Player';
 import {Timeline} from '@akashic-extension/akashic-timeline';
+import {MediumBlack64pxLabel} from './Label';
 
 export class TeachingTap extends g.E {
   private text1: g.Label;
@@ -14,24 +15,14 @@ export class TeachingTap extends g.E {
     super({
       scene: params.scene
     });
-    this.text1 = new g.Label({
+    this.text1 = new MediumBlack64pxLabel({
       scene: this.scene,
       text: '曲に合わせて',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 20
-      }),
       fontSize: 20
     });
-    this.text2 = new g.Label({
+    this.text2 = new MediumBlack64pxLabel({
       scene: this.scene,
       text: 'タップ',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 20
-      }),
       fontSize: 20
     });
     this.yubi = new g.Label({
@@ -39,7 +30,7 @@ export class TeachingTap extends g.E {
       text: '👆',
       font: new g.DynamicFont({
         game: g.game,
-        fontFamily: g.FontFamily.Serif,
+        fontFamily: g.FontFamily.Monospace,
         size: 60
       }),
       fontSize: 60

@@ -503,6 +503,65 @@
 			"width": 68,
 			"height": 62,
 			"path": "image/asiato.png"
+		},
+		"Label": {
+			"type": "script",
+			"path": "script/component/Label.js",
+			"global": true
+		},
+		"bold_black_128": {
+			"type": "image",
+			"width": 512,
+			"height": 256,
+			"path": "image/bold_black_128.png"
+		},
+		"medium_black_64": {
+			"type": "image",
+			"width": 512,
+			"height": 512,
+			"path": "image/medium_black_64.png"
+		},
+		"medium_white_64": {
+			"type": "image",
+			"width": 512,
+			"height": 512,
+			"path": "image/medium_white_64.png"
+		},
+		"bold_black_128_glyph": {
+			"type": "text",
+			"path": "text/bold_black_128_glyph.json"
+		},
+		"medium_black_64_glyph": {
+			"type": "text",
+			"path": "text/medium_black_64_glyph.json"
+		},
+		"medium_white_64_glyph": {
+			"type": "text",
+			"path": "text/medium_white_64_glyph.json"
+		},
+		"lightblue_circle_32": {
+			"type": "image",
+			"width": 32,
+			"height": 32,
+			"path": "image/lightblue_circle_32.png"
+		},
+		"red_circle_32": {
+			"type": "image",
+			"width": 32,
+			"height": 32,
+			"path": "image/red_circle_32.png"
+		},
+		"white_circle_32": {
+			"type": "image",
+			"width": 32,
+			"height": 32,
+			"path": "image/white_circle_32.png"
+		},
+		"gray_circle_32": {
+			"type": "image",
+			"width": 32,
+			"height": 32,
+			"path": "image/gray_circle_32.png"
 		}
 	},
 	"environment": {

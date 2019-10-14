@@ -16,7 +16,6 @@ export class GameSubScene extends SubScene {
   readonly onGameEnd: g.Trigger<GameResult> = new g.Trigger<GameResult>();
   private players: {[playerId: string]: Player} = {};
   private manager: GameManager;
-  private actionResultLabel: g.Label;
   private background: GameBackground;
   private playersLayer: g.E;
   private gestureHandler: GestureHandler;
@@ -34,16 +33,6 @@ export class GameSubScene extends SubScene {
     this.timeline = new Timeline(this.scene);
     this.manager = new GameManager({
       scene: this.scene
-    });
-    this.actionResultLabel = new g.Label({
-      scene: this.scene,
-      text: '',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 15
-      }),
-      fontSize: 30
     });
     this.background = new GameBackground({
       scene: this.scene
@@ -147,18 +136,10 @@ export class GameSubScene extends SubScene {
       // local
       // console.log('onBeatActionStatusFixed', event);
       switch (event.status) {
-        case BeatActionStatus.Great:
-          this.actionResultLabel.text = 'Great!!';
-          break;
-        case BeatActionStatus.Good:
-          this.actionResultLabel.text = 'Good!';
-          break;
         case BeatActionStatus.Fail:
           this.messenger.send('miss', {playerId: g.game.selfId});
-          this.actionResultLabel.text = 'Fail';
           break;
       }
-      this.actionResultLabel.invalidate();
     });
     this.manager.onLastSomeMeasures.add(event => {
       this.timeline.create(this.fadeOutOverlay, {modified: this.fadeOutOverlay.modified, destroyed: this.fadeOutOverlay.destroyed})

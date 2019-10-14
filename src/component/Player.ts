@@ -1,5 +1,6 @@
 import {Util} from '../util/Util';
 import {Easing, Timeline} from '@akashic-extension/akashic-timeline';
+import {MediumBlack64pxLabel} from './Label';
 
 export class Player extends g.E {
   private tori1: g.Sprite;
@@ -81,11 +82,11 @@ export class Player extends g.E {
         text: params.name,
         font: new g.DynamicFont({
           game: g.game,
-          fontFamily: g.FontFamily.Serif,
+          fontFamily: g.FontFamily.Monospace,
           size: 20
         }),
         fontSize: 20,
-        textColor: '#333'
+        textColor: '#0d0015'
       });
       this.nameLabel.x = (this.width - this.nameLabel.width) / 2;
       this.nameLabel.y = 0;
@@ -93,16 +94,10 @@ export class Player extends g.E {
     }
 
     if (params.isMe) {
-      this.meLabel = new g.Label({
+      this.meLabel = new MediumBlack64pxLabel({
         scene: this.scene,
         text: 'あなた',
-        font: new g.DynamicFont({
-          game: g.game,
-          fontFamily: g.FontFamily.Serif,
-          size: 20
-        }),
-        fontSize: 20,
-        textColor: '#333'
+        fontSize: 20
       });
       this.meLabel.x = (this.width - this.meLabel.width) / 2;
       this.meLabel.y = this.nameLabel ? -this.nameLabel.height : 0;

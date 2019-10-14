@@ -1,7 +1,9 @@
 import {RoundedFilledRect} from './RoundedFilledRect';
+import {MediumWhite64pxLabel} from './Label';
 
 export class JoinButton extends g.E {
-  private background: RoundedFilledRect;
+  private redBackground: RoundedFilledRect;
+  private grayBackground: RoundedFilledRect;
   private text: g.Label;
 
   constructor(params: {
@@ -14,27 +16,37 @@ export class JoinButton extends g.E {
       touchable: true,
       local: true
     });
-    this.background = new RoundedFilledRect({
+    this.redBackground = new RoundedFilledRect({
       scene: this.scene,
       width: this.width,
       height: this.height,
       x: 0,
       y: 0,
       borderRadius: 20,
-      cssColor: '#c33'
+      cssColor: '#c33',
+      circleAssetId: 'red_circle_32',
+      circleAssetSize: 32
     });
-    this.append(this.background);
+    this.append(this.redBackground);
 
-    this.text = new g.Label({
+    this.grayBackground = new RoundedFilledRect({
+      scene: this.scene,
+      width: this.width,
+      height: this.height,
+      x: 0,
+      y: 0,
+      borderRadius: 20,
+      cssColor: '#999',
+      circleAssetId: 'gray_circle_32',
+      circleAssetSize: 32
+    });
+    this.grayBackground.hide();
+    this.append(this.grayBackground);
+
+    this.text = new MediumWhite64pxLabel({
       scene: this.scene,
       text: '参加する',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 28
-      }),
-      fontSize: 28,
-      textColor: '#fff'
+      fontSize: 28
     });
     this.text.x = (this.width - this.text.width) / 2;
     this.text.y = (this.height - this.text.height) / 2;
@@ -42,7 +54,8 @@ export class JoinButton extends g.E {
   }
 
   setJoined() {
-    this.background.cssColor = '#999';
+    this.redBackground.hide();
+    this.grayBackground.show();
     this.text.text = '参加済み';
     this.text.invalidate();
   }

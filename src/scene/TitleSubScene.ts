@@ -1,5 +1,6 @@
 import {SubScene} from './SubScene';
 import {Util} from '../util/Util';
+import {BoldBlack128pxLabel} from '../component/Label';
 
 export class TitleSubScene extends SubScene {
   readonly onTitleSceneEnd = new g.Trigger<void>();
@@ -11,14 +12,9 @@ export class TitleSubScene extends SubScene {
   }
 
   init() {
-    this.titleLabel = new g.Label({
+    this.titleLabel = new BoldBlack128pxLabel({
       scene: this.scene,
-      text: '鳥の群れ',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 60
-      }),
+      text: '鳥の行進',
       fontSize: 60
     });
     this.titleLabel.x = (this.scene.game.width - this.titleLabel.width) / 2;

@@ -1,14 +1,22 @@
-export interface RoundedFilledRectParameterObject extends g.FilledRectParameterObject {
+export interface RoundedFilledRectParameterObject {
+  scene: g.Scene;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  cssColor: string;
+  circleAssetId: string;
+  circleAssetSize: number;
   borderRadius: number;
 }
 
 export class RoundedFilledRect extends g.E {
   private topBottomFilledRect: g.FilledRect;
   private leftRightFilledRect: g.FilledRect;
-  private leftTopCircle: g.Label;
-  private rightTopCircle: g.Label;
-  private rightBottomCircle: g.Label;
-  private leftBottomCircle: g.Label;
+  private leftTopCircle: g.Sprite;
+  private rightTopCircle: g.Sprite;
+  private rightBottomCircle: g.Sprite;
+  private leftBottomCircle: g.Sprite;
 
   constructor(params: RoundedFilledRectParameterObject) {
     super({
@@ -34,59 +42,46 @@ export class RoundedFilledRect extends g.E {
       y: params.borderRadius,
       cssColor: params.cssColor
     });
-    const fontSizeCoef = 1;
-    const fontCirclePaddingLeftCoef = 0.06;
-    const fontCirclePaddingTopCoef = 0.18;
-    const fontCirclePaddingBottomCoef = 0.06;
-    const size = params.borderRadius * 2 * fontSizeCoef;
-    const font = new g.DynamicFont({
-      game: g.game,
-      fontFamily: g.FontFamily.Serif,
-      size: size
-    });
-    this.leftTopCircle = new g.Label({
+    const size = params.borderRadius * 2;
+    this.leftTopCircle = new g.Sprite({
       scene: params.scene,
-      text: '●',
-      font: font,
-      fontSize: size,
+      src: params.scene.assets[params.circleAssetId],
       width: size,
       height: size,
-      textColor: params.cssColor,
-      x: -fontCirclePaddingLeftCoef * size,
-      y: -fontCirclePaddingTopCoef * size
+      srcWidth: params.circleAssetSize,
+      srcHeight: params.circleAssetSize,
+      x: 0,
+      y: 0
     });
-    this.rightTopCircle = new g.Label({
+    this.rightTopCircle = new g.Sprite({
       scene: params.scene,
-      text: '●',
-      font: font,
-      fontSize: size,
+      src: params.scene.assets[params.circleAssetId],
       width: size,
       height: size,
-      textColor: params.cssColor,
-      x: params.width - size + fontCirclePaddingLeftCoef * size,
-      y: -fontCirclePaddingTopCoef * size
+      srcWidth: params.circleAssetSize,
+      srcHeight: params.circleAssetSize,
+      x: params.width - size,
+      y: 0
     });
-    this.rightBottomCircle = new g.Label({
+    this.rightBottomCircle = new g.Sprite({
       scene: params.scene,
-      text: '●',
-      font: font,
-      fontSize: size,
+      src: params.scene.assets[params.circleAssetId],
       width: size,
       height: size,
-      textColor: params.cssColor,
-      x: params.width - size + fontCirclePaddingLeftCoef * size,
-      y: params.height - size - fontCirclePaddingBottomCoef * size
+      srcWidth: params.circleAssetSize,
+      srcHeight: params.circleAssetSize,
+      x: params.width - size,
+      y: params.height - size
     });
-    this.leftBottomCircle = new g.Label({
+    this.leftBottomCircle = new g.Sprite({
       scene: params.scene,
-      text: '●',
-      font: font,
-      fontSize: size,
+      src: params.scene.assets[params.circleAssetId],
       width: size,
       height: size,
-      textColor: params.cssColor,
-      x: -fontCirclePaddingLeftCoef * size,
-      y: params.height - size - fontCirclePaddingBottomCoef * size
+      srcWidth: params.circleAssetSize,
+      srcHeight: params.circleAssetSize,
+      x: 0,
+      y: params.height - size
     });
     this.append(this.topBottomFilledRect);
     this.append(this.leftRightFilledRect);
@@ -99,10 +94,6 @@ export class RoundedFilledRect extends g.E {
   set cssColor(value: string) {
     this.topBottomFilledRect.cssColor = value;
     this.leftRightFilledRect.cssColor = value;
-    this.leftTopCircle.textColor = value;
-    this.rightTopCircle.textColor = value;
-    this.rightBottomCircle.textColor = value;
-    this.leftBottomCircle.textColor = value;
     this.topBottomFilledRect.modified();
     this.leftRightFilledRect.modified();
     this.leftTopCircle.invalidate();

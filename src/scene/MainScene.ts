@@ -83,13 +83,28 @@ export class MainScene extends g.Scene {
     this.resultSubScene.init();
     this.append(this.resultSubScene);
 
-    // this.resultSubScene.setResult([BeatActionStatus.Waiting, BeatActionStatus.Waiting, BeatActionStatus.Great, BeatActionStatus.Great, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Good, BeatActionStatus.Fail]);
+    // this.resultSubScene.setResult([
+    //   BeatActionStatus.Waiting,
+    //   BeatActionStatus.Waiting,
+    //   BeatActionStatus.Great,
+    //   BeatActionStatus.Good,
+    //   BeatActionStatus.Good,
+    //   BeatActionStatus.Good,
+    //   BeatActionStatus.Great,
+    //   BeatActionStatus.Good,
+    //   BeatActionStatus.Good,
+    //   BeatActionStatus.Fail,
+    //   BeatActionStatus.Great,
+    //   BeatActionStatus.Great,
+    //   BeatActionStatus.Great,
+    //   BeatActionStatus.Great
+    // ]);
     // this.changeSubscene(this.resultSubScene);
     // this.playerJoiningManager.join();
     // this.changeSubscene(this.gameSubScene);
+    // this.changeSubscene(this.titleSubScene);
 
     this.playerJoiningManager.onPlayerJoin.addOnce(() => {
-      console.log('main join');
       this.changeSubscene(this.titleSubScene);
     });
 
