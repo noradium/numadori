@@ -562,13 +562,19 @@
 			"width": 32,
 			"height": 32,
 			"path": "image/gray_circle_32.png"
+		},
+		"StartButton": {
+			"type": "script",
+			"path": "script/component/StartButton.js",
+			"global": true
 		}
 	},
 	"environment": {
 		"sandbox-runtime": "2",
 		"niconico": {
 			"supportedModes": [
-				"single"
+				"single",
+				"multi"
 			]
 		}
 	},

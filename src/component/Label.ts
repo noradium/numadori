@@ -27,7 +27,16 @@ class Label extends g.Label {
       missingGlyph: glyph.missingGlyph
     });
     super({
-      ...params,
+      scene: params.scene,
+      fontSize: params.fontSize,
+      text: params.text,
+      width: params.width,
+      height: params.height,
+      widthAutoAdjust: typeof params.widthAutoAdjust !== 'undefined' ? params.widthAutoAdjust : true,
+      textAlign: params.textAlign,
+      x: params.x,
+      y: params.y,
+      opacity: params.opacity,
       font
     });
   }
@@ -38,30 +47,6 @@ export class MediumBlack64pxLabel extends Label {
     super(params, {
       image: 'medium_black_64',
       glyph: 'medium_black_64_glyph'
-    });
-  }
-}
-export class MediumLightblue64pxLabel extends Label {
-  constructor(params: LabelParameterObject) {
-    super(params, {
-      image: 'medium_lightblue_64',
-      glyph: 'medium_lightblue_64_glyph'
-    });
-  }
-}
-export class MediumGray64pxLabel extends Label {
-  constructor(params: LabelParameterObject) {
-    super(params, {
-      image: 'medium_gray_64',
-      glyph: 'medium_gray_64_glyph'
-    });
-  }
-}
-export class MediumRed64pxLabel extends Label {
-  constructor(params: LabelParameterObject) {
-    super(params, {
-      image: 'medium_red_64',
-      glyph: 'medium_red_64_glyph'
     });
   }
 }

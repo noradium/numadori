@@ -114,7 +114,7 @@ export default {
       beatAction: [BeatAction.Normal, BeatAction.PiPyako, BeatAction.Normal, BeatAction.Normal]
     }, {
       assetId: 'music37',
-      beatAction: [BeatAction.Normal, BeatAction.Normal, BeatAction.Normal, BeatAction.Normal]
+      beatAction: [BeatAction.PiPyako, BeatAction.Normal, BeatAction.Normal, BeatAction.Normal]
     }, {
       assetId: 'music38',
       beatAction: [BeatAction.Normal, BeatAction.PiPyako, BeatAction.Normal, BeatAction.Normal]

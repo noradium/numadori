@@ -6,4 +6,9 @@ export class Util {
   static stopAudio(scene: g.Scene, assetId: string) {
     (scene.assets[assetId] as g.AudioAsset).stop();
   }
+
+  static isAtsumaruEnv() {
+    return true;
+    // return typeof (window as any).RPGAtsumaru !== 'undefined';
+  }
 }

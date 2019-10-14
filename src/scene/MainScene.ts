@@ -9,6 +9,7 @@ import {WaitingRoomSubScene} from './WaitingRoomSubScene';
 import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
 import {ResultSubScene} from './ResultSubScene';
 import {BeatActionStatus} from '../component/GameManager';
+import {Util} from '../util/Util';
 
 export class MainScene extends g.Scene {
   private currentSubScene: SubScene;
@@ -103,6 +104,10 @@ export class MainScene extends g.Scene {
     // this.playerJoiningManager.join();
     // this.changeSubscene(this.gameSubScene);
     // this.changeSubscene(this.titleSubScene);
+
+    if (Util.isAtsumaruEnv()) {
+      this.changeSubscene(this.titleSubScene);
+    }
 
     this.playerJoiningManager.onPlayerJoin.addOnce(() => {
       this.changeSubscene(this.titleSubScene);

@@ -9,6 +9,7 @@ import {JoinButton} from '../component/JoinButton';
 import {StopJoinButton} from '../component/StopJoinButton';
 import {Messenger} from '../component/Messenger';
 import {MediumBlack64pxLabel} from '../component/Label';
+import {StartButton} from '../component/StartButton';
 
 export class WaitingRoomSubScene extends SubScene {
   readonly onSceneEnd = new g.Trigger<void>();
@@ -19,8 +20,9 @@ export class WaitingRoomSubScene extends SubScene {
   private teachingTap: TeachingTap;
   private teachingSlide: TeachingSlide;
   private teachingBackground: RoundedFilledRect;
-  private joinButton?: JoinButton;
-  private stopJoinButton?: StopJoinButton;
+  private joinButton: JoinButton;
+  private stopJoinButton: StopJoinButton;
+  private atsumaruStartButton: StartButton;
   private messenger: Messenger;
   private timeline: Timeline;
 
@@ -109,6 +111,16 @@ export class WaitingRoomSubScene extends SubScene {
     });
     this.append(this.joinButton);
 
+    this.atsumaruStartButton = new StartButton({
+      scene: this.scene
+    });
+    this.atsumaruStartButton.x = this.scene.game.width - this.atsumaruStartButton.width - 20;
+    this.atsumaruStartButton.y = this.scene.game.height - this.atsumaruStartButton.height - 20;
+    this.atsumaruStartButton.pointUp.add(() => {
+      this.onSceneEnd.fire();
+    });
+    this.append(this.atsumaruStartButton);
+
     this.hideContent();
 
     this.messenger.onReceive('gameStart', () => {
@@ -118,15 +130,22 @@ export class WaitingRoomSubScene extends SubScene {
 
   showContent() {
     this.titleLabel.show();
-    this.playerNumLabel.show();
-    this.playerNumValueLabel.show();
+    if (!Util.isAtsumaruEnv()) {
+      this.playerNumLabel.show();
+      this.playerNumValueLabel.show();
+    }
     this.teachingTap.show();
     this.teachingSlide.show();
     this.teachingBackground.show();
-    if (this.playerJoiningManager.isGameMaster()) {
-      this.stopJoinButton.show();
+
+    if (Util.isAtsumaruEnv()) {
+      this.atsumaruStartButton.show();
     } else {
-      this.joinButton.show();
+      if (this.playerJoiningManager.isGameMaster()) {
+        this.stopJoinButton.show();
+      } else {
+        this.joinButton.show();
+      }
     }
   }
 
@@ -176,7 +195,8 @@ export class WaitingRoomSubScene extends SubScene {
     this.teachingTap.hide();
     this.teachingSlide.hide();
     this.teachingBackground.hide();
-    this.joinButton && this.joinButton.hide();
-    this.stopJoinButton && this.stopJoinButton.hide();
+    this.joinButton.hide();
+    this.stopJoinButton.hide();
+    this.atsumaruStartButton.hide();
   }
 }

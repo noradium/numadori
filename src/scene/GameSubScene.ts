@@ -7,6 +7,7 @@ import {Messenger} from '../component/Messenger';
 import {Timeline} from '@akashic-extension/akashic-timeline';
 import {GameBackground} from '../component/GameBackground';
 import {BeatAction} from '../score/BeatAction';
+import {Util} from '../util/Util';
 
 export interface GameResult {
   states: BeatActionStatus[];
@@ -165,18 +166,30 @@ export class GameSubScene extends SubScene {
   }
 
   initPlayers() {
-    this.playerJoiningManager.players.forEach((p, index) => {
+    if (Util.isAtsumaruEnv()) {
       const player = new Player({
         scene: this.scene,
-        id: p.id,
-        name: p.userName,
-        x: 100 + index * 100,
+        id: this.scene.game.selfId,
+        x: 300,
         y: 100,
-        isMe: p.id === this.scene.game.selfId
+        isMe: true
       });
-      this.players[p.id] = player;
+      this.players[this.scene.game.selfId] = player;
       this.playersLayer.append(player);
-    });
+    } else {
+      this.playerJoiningManager.players.forEach((p, index) => {
+        const player = new Player({
+          scene: this.scene,
+          id: p.id,
+          name: p.userName,
+          x: 100 + index * 100,
+          y: 100,
+          isMe: p.id === this.scene.game.selfId
+        });
+        this.players[p.id] = player;
+        this.playersLayer.append(player);
+      });
+    }
   }
 
   showContent() {
