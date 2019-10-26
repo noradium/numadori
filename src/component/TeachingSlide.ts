@@ -15,6 +15,7 @@ export class TeachingSlide extends g.E {
     super({
       scene: params.scene
     });
+    this.timeline = new Timeline(this.scene);
     this.text1 = new MediumBlack64pxLabel({
       scene: this.scene,
       text: '掛け声で',
@@ -59,17 +60,9 @@ export class TeachingSlide extends g.E {
     this.append(this.yubi);
   }
 
-  startAnimation() {
-    this.timeline = new Timeline(this.scene);
-    const tapDuration = 200;
-    const interval = 700;
-    this.timeline.create(this.yubi, {
-      modified: this.yubi.modified,
-      destroyed: this.yubi.destroyed,
-      loop: true
-    })
-      .moveBy(0, 80, tapDuration)
-      .wait(interval - tapDuration)
+  slideDown() {
+    this.timeline.create(this.yubi, {modified: this.yubi.modified, destroyed: this.yubi.destroyed})
+      .moveBy(0, 80, 50)
       .con()
       .call(() => {
         this.tori.setTame();
@@ -79,10 +72,12 @@ export class TeachingSlide extends g.E {
         this.text2.invalidate();
         this.text1.x = (this.width - this.text1.width) / 2;
         this.text2.x = (this.width - this.text2.width) / 2;
-      })
-      .wait(interval)
-      .moveBy(0, -80, tapDuration)
-      .wait(interval - tapDuration)
+      });
+  }
+
+  slideUp() {
+    this.timeline.create(this.yubi, {modified: this.yubi.modified, destroyed: this.yubi.destroyed})
+      .moveBy(0, -80, 50)
       .con()
       .call(() => {
         this.tori.setJump();
@@ -92,7 +87,42 @@ export class TeachingSlide extends g.E {
         this.text2.invalidate();
         this.text1.x = (this.width - this.text1.width) / 2;
         this.text2.x = (this.width - this.text2.width) / 2;
-      })
-      .wait(interval);
+      });
+  }
+
+  startAnimation() {
+    // const tapDuration = 200;
+    // const interval = 700;
+    // this.timeline.create(this.yubi, {
+    //   modified: this.yubi.modified,
+    //   destroyed: this.yubi.destroyed,
+    //   loop: true
+    // })
+    //   .moveBy(0, 80, tapDuration)
+    //   .wait(interval - tapDuration)
+    //   .con()
+    //   .call(() => {
+    //     this.tori.setTame();
+    //     this.text1.text = '掛け声で';
+    //     this.text2.text = '下スライドして';
+    //     this.text1.invalidate();
+    //     this.text2.invalidate();
+    //     this.text1.x = (this.width - this.text1.width) / 2;
+    //     this.text2.x = (this.width - this.text2.width) / 2;
+    //   })
+    //   .wait(interval)
+    //   .moveBy(0, -80, tapDuration)
+    //   .wait(interval - tapDuration)
+    //   .con()
+    //   .call(() => {
+    //     this.tori.setJump();
+    //     this.text1.text = '上スライドで';
+    //     this.text2.text = 'ジャンプ';
+    //     this.text1.invalidate();
+    //     this.text2.invalidate();
+    //     this.text1.x = (this.width - this.text1.width) / 2;
+    //     this.text2.x = (this.width - this.text2.width) / 2;
+    //   })
+    //   .wait(interval);
   }
 }

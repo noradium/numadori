@@ -10,6 +10,9 @@ import {StopJoinButton} from '../component/StopJoinButton';
 import {Messenger} from '../component/Messenger';
 import {MediumBlack64pxLabel} from '../component/Label';
 import {StartButton} from '../component/StartButton';
+import {GameManager} from '../component/GameManager';
+import TutorialScore from '../score/TutorialScore';
+import {BeatAction} from '../score/BeatAction';
 
 export class WaitingRoomSubScene extends SubScene {
   readonly onSceneEnd = new g.Trigger<void>();
@@ -25,6 +28,7 @@ export class WaitingRoomSubScene extends SubScene {
   private atsumaruStartButton: StartButton;
   private messenger: Messenger;
   private timeline: Timeline;
+  private manager: GameManager;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -32,6 +36,11 @@ export class WaitingRoomSubScene extends SubScene {
   }
 
   init() {
+    this.manager = new GameManager({
+      scene: this.scene,
+      score: TutorialScore,
+      loop: true
+    });
     this.titleLabel = new MediumBlack64pxLabel({
       scene: this.scene,
       text: '鳥の行進',
@@ -126,6 +135,48 @@ export class WaitingRoomSubScene extends SubScene {
     this.messenger.onReceive('gameStart', () => {
       this.onSceneEnd.fire();
     });
+
+    let pipyakoCount = 0;
+    this.manager.onBeat.add(event => {
+      if (pipyakoCount > 0) {
+        pipyakoCount++;
+      }
+      if (event.action === BeatAction.PiPyako) {
+        pipyakoCount = 1;
+        // tap
+        this.teachingTap.opacity = 1;
+        this.teachingSlide.opacity = 0.3;
+        this.teachingTap.modified();
+        this.teachingSlide.modified();
+        this.teachingTap.action(event.beatIndex);
+        return;
+      }
+
+      if (pipyakoCount === 3) {
+        // しゃがみ
+        this.teachingTap.opacity = 0.3;
+        this.teachingSlide.opacity = 1;
+        this.teachingTap.modified();
+        this.teachingSlide.modified();
+        this.teachingSlide.slideDown();
+        return;
+      }
+      if (pipyakoCount === 4) {
+        pipyakoCount = 0;
+        // ジャンプ
+        this.teachingSlide.slideUp();
+        return;
+      }
+      if (event.action === BeatAction.Normal) {
+        // tap
+        this.teachingTap.opacity = 1;
+        this.teachingSlide.opacity = 0.3;
+        this.teachingTap.modified();
+        this.teachingSlide.modified();
+        this.teachingTap.action(event.beatIndex);
+      }
+      // not reached
+    });
   }
 
   showContent() {
@@ -166,6 +217,7 @@ export class WaitingRoomSubScene extends SubScene {
         this.teachingTap.show();
         this.teachingTap.startAnimation();
         Util.playAudio(this.scene, 'peta1');
+        this.manager.start();
       })
       .wait(3000)
       .call(() => {

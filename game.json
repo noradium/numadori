@@ -567,6 +567,34 @@
 			"type": "script",
 			"path": "script/component/StartButton.js",
 			"global": true
+		},
+		"Score": {
+			"type": "script",
+			"path": "script/score/Score.js",
+			"global": true
+		},
+		"TutorialScore": {
+			"type": "script",
+			"path": "script/score/TutorialScore.js",
+			"global": true
+		},
+		"tutorial1": {
+			"type": "audio",
+			"path": "audio/tutorial1",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"tutorial2": {
+			"type": "audio",
+			"path": "audio/tutorial2",
+			"systemId": "sound",
+			"duration": 2000
+		},
+		"tutorial3": {
+			"type": "audio",
+			"path": "audio/tutorial3",
+			"systemId": "sound",
+			"duration": 2000
 		}
 	},
 	"environment": {

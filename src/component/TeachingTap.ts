@@ -3,10 +3,10 @@ import {Timeline} from '@akashic-extension/akashic-timeline';
 import {MediumBlack64pxLabel} from './Label';
 
 export class TeachingTap extends g.E {
+  readonly player: Player;
   private text1: g.Label;
   private text2: g.Label;
   private yubi: g.Label;
-  private tori: Player;
   private timeline: Timeline;
 
   constructor(params: {
@@ -15,6 +15,7 @@ export class TeachingTap extends g.E {
     super({
       scene: params.scene
     });
+    this.timeline = new Timeline(this.scene);
     this.text1 = new MediumBlack64pxLabel({
       scene: this.scene,
       text: '曲に合わせて',
@@ -45,55 +46,90 @@ export class TeachingTap extends g.E {
     this.yubi.y = this.text2.y + this.text2.height;
     this.yubi.x = (this.width - this.yubi.width) / 2;
 
-    this.tori = new Player({
+    this.player = new Player({
       scene: this.scene,
       disableSound: true,
       x: 0,
       y: this.yubi.y + this.yubi.height - 30
     });
 
-    this.append(this.tori);
+    this.append(this.player);
     this.append(this.text1);
     this.append(this.text2);
     this.append(this.yubi);
   }
 
+  action(beatIndex: number) {
+    switch (beatIndex) {
+      case 0:
+      case 2:
+        this.player.setStep1();
+        this.timeline.create(this.yubi, {modified: this.yubi.modified, destroyed: this.yubi.destroyed})
+          .rotateBy(-60, 50)
+          .con()
+          .moveBy(0, 10, 50);
+        this.scene.setTimeout(() => {
+          this.player.setStep2();
+          this.timeline.create(this.yubi, {modified: this.yubi.modified, destroyed: this.yubi.destroyed})
+            .rotateBy(60, 50)
+            .con()
+            .moveBy(0, -10, 50);
+        }, 150);
+        break;
+      case 1:
+      case 3:
+        this.player.setStep3();
+        this.timeline.create(this.yubi, {modified: this.yubi.modified, destroyed: this.yubi.destroyed})
+          .rotateBy(-60, 50)
+          .con()
+          .moveBy(0, 10, 50);
+        this.scene.setTimeout(() => {
+          this.player.setStep4();
+          this.timeline.create(this.yubi, {modified: this.yubi.modified, destroyed: this.yubi.destroyed})
+            .rotateBy(60, 50)
+            .con()
+            .moveBy(0, -10, 50);
+        }, 150);
+        break;
+    }
+  }
+
   startAnimation() {
-    this.timeline = new Timeline(this.scene);
-    const tapDuration = 100;
-    const interval = 500;
-    this.timeline.create(this.yubi, {
-      modified: this.yubi.modified,
-      destroyed: this.yubi.destroyed,
-      loop: true
-    })
-      .rotateBy(-60, tapDuration)
-      .con()
-      .moveBy(0, 10, tapDuration)
-      .wait(interval - tapDuration)
-      .con()
-      .call(() => this.tori.setStep2())
-      .wait(interval)
-      .rotateBy(60, tapDuration)
-      .con()
-      .moveBy(0, -10, tapDuration)
-      .wait(interval - tapDuration)
-      .con()
-      .call(() => this.tori.setStep3())
-      .wait(interval)
-      .rotateBy(-60, tapDuration)
-      .con()
-      .moveBy(0, 10, tapDuration)
-      .wait(interval - tapDuration)
-      .con()
-      .call(() => this.tori.setStep4())
-      .wait(interval)
-      .rotateBy(60, tapDuration)
-      .con()
-      .moveBy(0, -10, tapDuration)
-      .wait(interval - tapDuration)
-      .con()
-      .call(() => this.tori.setStep1())
-      .wait(interval);
+    // this.timeline = new Timeline(this.scene);
+    // const tapDuration = 100;
+    // const interval = 500;
+    // this.timeline.create(this.yubi, {
+    //   modified: this.yubi.modified,
+    //   destroyed: this.yubi.destroyed,
+    //   loop: true
+    // })
+    //   .rotateBy(-60, tapDuration)
+    //   .con()
+    //   .moveBy(0, 10, tapDuration)
+    //   .wait(interval - tapDuration)
+    //   .con()
+    //   .call(() => this.player.setStep2())
+    //   .wait(interval)
+    //   .rotateBy(60, tapDuration)
+    //   .con()
+    //   .moveBy(0, -10, tapDuration)
+    //   .wait(interval - tapDuration)
+    //   .con()
+    //   .call(() => this.player.setStep3())
+    //   .wait(interval)
+    //   .rotateBy(-60, tapDuration)
+    //   .con()
+    //   .moveBy(0, 10, tapDuration)
+    //   .wait(interval - tapDuration)
+    //   .con()
+    //   .call(() => this.player.setStep4())
+    //   .wait(interval)
+    //   .rotateBy(60, tapDuration)
+    //   .con()
+    //   .moveBy(0, -10, tapDuration)
+    //   .wait(interval - tapDuration)
+    //   .con()
+    //   .call(() => this.player.setStep1())
+    //   .wait(interval);
   }
 }

@@ -204,9 +204,8 @@ export class Player extends g.E {
     this.tori_tame1.hide();
     this.tori_jump1.show();
     this.tori_miss1.hide();
-    if (!this.disableSound) {
-      Util.playAudio(this.scene, 'numa_tail');
-    }
+    // numa_tail だけは disableAudio の例外。再生する
+    Util.playAudio(this.scene, 'numa_tail');
     this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
       .moveY(this.highTopY, 300, Easing.easeInOutExpo)
       .moveY(this.topY, 60, Easing.easeInOutExpo);

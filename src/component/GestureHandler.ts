@@ -64,9 +64,10 @@ export class GestureHandler extends g.E {
   private onPointMove(event: g.PointMoveEvent) {
     // console.log('pointmove', event.startDelta);
     if (
+      this.currentTempGesture === Gesture.Tap &&
       this.lastGesture !== Gesture.SlideDown &&
       this.lastGesture !== Gesture.SlideUp &&
-      event.startDelta.y > 10
+      event.startDelta.y > 8
     ) {
       this.currentTempGesture = null;
       this.lastGesture = Gesture.SlideDown;

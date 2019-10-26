@@ -104,6 +104,7 @@ export class MainScene extends g.Scene {
     // this.playerJoiningManager.join();
     // this.changeSubscene(this.gameSubScene);
     // this.changeSubscene(this.titleSubScene);
+    this.changeSubscene(this.waitingRoomSubScene);
 
     if (Util.isAtsumaruEnv()) {
       this.changeSubscene(this.titleSubScene);

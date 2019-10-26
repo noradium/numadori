@@ -8,6 +8,7 @@ import {Timeline} from '@akashic-extension/akashic-timeline';
 import {GameBackground} from '../component/GameBackground';
 import {BeatAction} from '../score/BeatAction';
 import {Util} from '../util/Util';
+import NonbiriTouringScore from '../score/NonbiriTouringScore';
 
 export interface GameResult {
   states: BeatActionStatus[];
@@ -33,7 +34,8 @@ export class GameSubScene extends SubScene {
   init() {
     this.timeline = new Timeline(this.scene);
     this.manager = new GameManager({
-      scene: this.scene
+      scene: this.scene,
+      score: NonbiriTouringScore
     });
     this.background = new GameBackground({
       scene: this.scene
