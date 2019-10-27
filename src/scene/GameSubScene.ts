@@ -137,9 +137,20 @@ export class GameSubScene extends SubScene {
     });
     this.manager.onBeatActionStatusFixed.add(event => {
       // local
+      const myPlayer = this.players[this.scene.game.selfId];
+      if (!myPlayer) {
+        return;
+      }
       // console.log('onBeatActionStatusFixed', event);
       switch (event.status) {
+        case BeatActionStatus.Great:
+          myPlayer.showFeedbackLabel('great');
+          break;
+        case BeatActionStatus.Good:
+          myPlayer.showFeedbackLabel('good');
+          break;
         case BeatActionStatus.Fail:
+          myPlayer.showFeedbackLabel('fail');
           this.messenger.send('miss', {playerId: g.game.selfId});
           break;
       }

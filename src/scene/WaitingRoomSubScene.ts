@@ -209,23 +209,24 @@ export class WaitingRoomSubScene extends SubScene {
       this.playerNumValueLabel.text = `${this.playerJoiningManager.players.length}`;
       this.playerNumValueLabel.invalidate();
     });
+    this.manager.start();
 
-    this.timeline = new Timeline(this.scene);
-    this.timeline.create(this.scene)
-      .wait(1000)
-      .call(() => {
-        this.teachingTap.show();
-        this.teachingTap.startAnimation();
-        Util.playAudio(this.scene, 'peta1');
-        this.manager.start();
-      })
-      .wait(3000)
-      .call(() => {
-        this.teachingSlide.show();
-        this.teachingSlide.startAnimation();
-        Util.playAudio(this.scene, 'peta1');
-      })
-      .wait(5000);
+    // this.timeline = new Timeline(this.scene);
+    // this.timeline.create(this.scene)
+    //   .wait(1000)
+    //   .call(() => {
+    //     this.teachingTap.show();
+    //     this.teachingTap.startAnimation();
+    //     Util.playAudio(this.scene, 'peta1');
+    //     this.manager.start();
+    //   })
+    //   .wait(3000)
+    //   .call(() => {
+    //     this.teachingSlide.show();
+    //     this.teachingSlide.startAnimation();
+    //     Util.playAudio(this.scene, 'peta1');
+    //   })
+    //   .wait(5000);
   }
 
   onUpdate() {
@@ -237,7 +238,8 @@ export class WaitingRoomSubScene extends SubScene {
       this.titleEndTimer.destroy();
       this.titleEndTimer = null;
     }
-    this.timeline.clear();
+    this.manager.stop();
+    // this.timeline.clear();
   }
 
   hideContent() {

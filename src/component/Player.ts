@@ -12,6 +12,9 @@ export class Player extends g.E {
   private tori_miss1: g.Sprite;
   private nameLabel: g.Label;
   private meLabel: g.Label;
+  private greatLabel: g.Sprite;
+  private goodLabel: g.Sprite;
+  private failLabel: g.Sprite;
   private _currentStep: number;
   private disableSound: boolean;
   private timeline: Timeline;
@@ -103,6 +106,34 @@ export class Player extends g.E {
       this.meLabel.y = this.nameLabel ? -this.nameLabel.height : 0;
       this.append(this.meLabel);
     }
+
+    this.greatLabel = new g.Sprite({
+      scene: params.scene,
+      src: params.scene.assets['great_icon'],
+      opacity: 0,
+      x: this.width - 30,
+      y: 0
+    });
+    this.goodLabel = new g.Sprite({
+      scene: params.scene,
+      src: params.scene.assets['good_icon'],
+      opacity: 0,
+      x: this.width - 30,
+      y: 0
+    });
+    this.failLabel = new g.Sprite({
+      scene: params.scene,
+      src: params.scene.assets['fail_icon'],
+      opacity: 0,
+      x: this.width - 30,
+      y: 0
+    });
+    // this.greatLabel.hide();
+    // this.goodLabel.hide();
+    // this.failLabel.hide();
+    this.append(this.greatLabel);
+    this.append(this.goodLabel);
+    this.append(this.failLabel);
 
     this.modified();
     this.setStep1();
@@ -224,6 +255,25 @@ export class Player extends g.E {
     this.tori_miss1.show();
     if (!this.disableSound) {
       Util.playAudio(this.scene, 'miss');
+    }
+  }
+
+  showFeedbackLabel(type: 'great' | 'good' | 'fail') {
+    const targetEntity = this.getFeedbackLabelTargetEntity(type);
+    this.timeline.create(targetEntity, {modified: targetEntity.modified, destroyed: targetEntity.destroyed})
+      .fadeIn(50, Easing.easeOutCirc)
+      .wait(120)
+      .fadeOut(50, Easing.easeOutCirc);
+  }
+
+  private getFeedbackLabelTargetEntity(type: 'great' | 'good' | 'fail') {
+    switch (type) {
+      case 'great':
+        return this.greatLabel;
+      case 'good':
+        return this.goodLabel;
+      case 'fail':
+        return this.failLabel;
     }
   }
 }

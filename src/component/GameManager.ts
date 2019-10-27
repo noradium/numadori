@@ -75,6 +75,10 @@ export class GameManager extends g.E {
     // console.log('timeline', this.timeline);
   }
 
+  stop() {
+    this.timeline = null;
+  }
+
   onUpdate() {
     if (!this.timeline) {
       return;

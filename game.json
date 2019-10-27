@@ -595,6 +595,24 @@
 			"path": "audio/tutorial3",
 			"systemId": "sound",
 			"duration": 2000
+		},
+		"fail_icon": {
+			"type": "image",
+			"width": 64,
+			"height": 64,
+			"path": "image/fail_icon.png"
+		},
+		"good_icon": {
+			"type": "image",
+			"width": 64,
+			"height": 64,
+			"path": "image/good_icon.png"
+		},
+		"great_icon": {
+			"type": "image",
+			"width": 64,
+			"height": 64,
+			"path": "image/great_icon.png"
 		}
 	},
 	"environment": {

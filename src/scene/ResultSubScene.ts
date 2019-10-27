@@ -174,7 +174,7 @@ export class ResultSubScene extends SubScene {
     }, 0);
     const points = states.reduce((prev, current) => prev + this.state2point(current), 0);
     const failedCount = states.filter(v => v === BeatActionStatus.Fail).length;
-
+    console.log(`result: ${points}/${pointsPerfect} (${failedCount} miss)`);
     const hyoukaStamp = (() => {
       if (points === pointsPerfect) {
         return HyoukaStamp.Perfect;
@@ -182,7 +182,7 @@ export class ResultSubScene extends SubScene {
       if (points > pointsPerfect - 6 && failedCount < 2) {
         return HyoukaStamp.HighLevel;
       }
-      if (points > pointsPerfect - 10) {
+      if (points > pointsPerfect - 12) {
         return HyoukaStamp.DemoHeibon;
       }
       return HyoukaStamp.Heibon;
@@ -236,6 +236,7 @@ export class ResultSubScene extends SubScene {
       // Heibon
       return 'もう少しがんばろう';
     })();
+    console.log(hyoukaStamp, hyoukaMessage);
 
     return {
       stamp: hyoukaStamp,
