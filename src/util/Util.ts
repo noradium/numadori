@@ -8,7 +8,7 @@ export class Util {
   }
 
   static isAtsumaruEnv() {
-    // return true;
-    return typeof window !== 'undefined' && typeof (window as any).RPGAtsumaru !== 'undefined';
+    return true;
+    // return typeof window !== 'undefined' && typeof (window as any).RPGAtsumaru !== 'undefined';
   }
 }
