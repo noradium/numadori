@@ -31,17 +31,17 @@ export class GameManager extends g.E {
   readonly onLastSomeMeasures: g.Trigger<{age: number}>;
   /**
    * ※ BB: 1拍の長さ
-   *              |    0.2 BB    |        0.3 BB      |
-   *              |       |0.1 BB|   0.2 BB  |        |
+   *              |    0.25 BB   |        0.3 BB      |
+   *              |       |0.15BB|   0.2 BB  |        |
    *   miss       | good  |    great         |  good  |  miss
    *              |       |      |           |        |
    * ----------------------------B-----------------------------
    *                           (↑Beat)
    */
-  private GREAT_MARGIN_FW = 0.2;
-  private GREAT_MARGIN_BW = 0.1;
+  private GREAT_MARGIN_FW = 0.20;
+  private GREAT_MARGIN_BW = 0.15;
   private GOOD_MARGIN_FW = 0.3;
-  private GOOD_MARGIN_BW = 0.2;
+  private GOOD_MARGIN_BW = 0.25;
   private score: Score;
   private loop: boolean;
   private timeline: Timeline;
