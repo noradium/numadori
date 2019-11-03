@@ -630,7 +630,7 @@
 			"type": "audio",
 			"path": "audio/jingle_highlevel",
 			"systemId": "sound",
-			"duration": 2044
+			"duration": 4128
 		},
 		"tutorial": {
 			"type": "audio",
