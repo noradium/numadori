@@ -10,7 +10,7 @@
     "start": "akashic-sandbox .",
     "export-zip": "rimraf game.zip && akashic-cli-export-zip -o game.zip -s",
     "export-html": "rimraf game && akashic-cli-export-html -o game",
-    "export-atsumaru": "akashic export html --output game.zip --atsumaru --force",
+    "export-atsumaru": "akashic export html --magnify --output game.zip --atsumaru --force",
     "test": "jest"
   },
   "author": "",

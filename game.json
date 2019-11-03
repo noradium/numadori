@@ -613,6 +613,48 @@
 			"width": 64,
 			"height": 64,
 			"path": "image/great_icon.png"
+		},
+		"pi2": {
+			"type": "audio",
+			"path": "audio/pi2",
+			"systemId": "sound",
+			"duration": 445
+		},
+		"jingle_heibon": {
+			"type": "audio",
+			"path": "audio/jingle_heibon",
+			"systemId": "sound",
+			"duration": 3005
+		},
+		"jingle_highlevel": {
+			"type": "audio",
+			"path": "audio/jingle_highlevel",
+			"systemId": "sound",
+			"duration": 4076
+		},
+		"tutorial": {
+			"type": "audio",
+			"path": "audio/tutorial",
+			"systemId": "sound",
+			"duration": 16066
+		},
+		"heibon": {
+			"type": "image",
+			"width": 124,
+			"height": 64,
+			"path": "image/heibon.png"
+		},
+		"highlevel": {
+			"type": "image",
+			"width": 259,
+			"height": 62,
+			"path": "image/highlevel.png"
+		},
+		"perfect": {
+			"type": "image",
+			"width": 170,
+			"height": 49,
+			"path": "image/perfect.png"
 		}
 	},
 	"environment": {

@@ -1,3 +1,6 @@
+import {BeatActionStatus} from './GameManager';
+import {HyoukaStamp} from '../scene/ResultSubScene';
+
 interface MessageType {
   join: {
     id: string;
@@ -24,6 +27,15 @@ interface MessageType {
   };
   miss: {
     playerId: string;
+  };
+  result: {
+    playerId: string;
+    playerName: string;
+    states: BeatActionStatus[];
+    points: number;
+    hyouka: {
+      stamp: HyoukaStamp;
+    }
   };
 }
 

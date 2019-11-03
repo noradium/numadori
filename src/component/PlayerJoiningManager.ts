@@ -75,6 +75,14 @@ export class PlayerJoiningManager {
     });
   }
 
+  me(): Player | null {
+    const me = this.players.filter(player => player.id === g.game.selfId);
+    if (!me) {
+      return;
+    }
+    return me[0];
+  }
+
   /**
    * このハンドラは、ニコ生においては生主のときのみ呼ばれる
    * @param event

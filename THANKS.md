@@ -11,3 +11,10 @@ http://commons.nicovideo.jp/material/nc173580
 https://www.silhouette-illust.com/illust/31352
 
 http://jikasei.me/font/rounded-mplus/
+
+
+http://commons.nicovideo.jp/material/nc176122
+
+http://commons.nicovideo.jp/material/nc162566
+
+http://commons.nicovideo.jp/material/nc151093

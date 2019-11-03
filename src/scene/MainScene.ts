@@ -80,28 +80,33 @@ export class MainScene extends g.Scene {
     this.gameSubScene.onGameEnd.add(event => this.onGameEnd(event));
     this.append(this.gameSubScene);
 
-    this.resultSubScene = new ResultSubScene(this);
+    this.resultSubScene = new ResultSubScene(this, this.playerJoiningManager);
     this.resultSubScene.init();
     this.append(this.resultSubScene);
 
-    // this.resultSubScene.setResult([
-    //   BeatActionStatus.Waiting,
-    //   BeatActionStatus.Waiting,
-    //   BeatActionStatus.Great,
-    //   BeatActionStatus.Good,
-    //   BeatActionStatus.Good,
-    //   BeatActionStatus.Good,
-    //   BeatActionStatus.Great,
-    //   BeatActionStatus.Good,
-    //   BeatActionStatus.Good,
-    //   BeatActionStatus.Fail,
-    //   BeatActionStatus.Great,
-    //   BeatActionStatus.Great,
-    //   BeatActionStatus.Great,
-    //   BeatActionStatus.Great
-    // ]);
-    // this.changeSubscene(this.resultSubScene);
-    // this.playerJoiningManager.join();
+    this.playerJoiningManager.join();
+    this.resultSubScene.setResult([
+      // BeatActionStatus.Waiting,
+      // BeatActionStatus.Waiting,
+      // BeatActionStatus.Great,
+      // BeatActionStatus.Good,
+      // BeatActionStatus.Good,
+      // BeatActionStatus.Good,
+      // BeatActionStatus.Great,
+      BeatActionStatus.Good,
+      BeatActionStatus.Good,
+      BeatActionStatus.Fail,
+      BeatActionStatus.Fail,
+      BeatActionStatus.Fail,
+      BeatActionStatus.Fail,
+      BeatActionStatus.Fail,
+      BeatActionStatus.Fail,
+      BeatActionStatus.Great,
+      BeatActionStatus.Great,
+      BeatActionStatus.Great,
+      BeatActionStatus.Great
+    ]);
+    this.changeSubscene(this.resultSubScene);
     // this.changeSubscene(this.gameSubScene);
     // this.changeSubscene(this.titleSubScene);
     // this.changeSubscene(this.waitingRoomSubScene);
@@ -111,7 +116,7 @@ export class MainScene extends g.Scene {
     }
 
     this.playerJoiningManager.onPlayerJoin.addOnce(() => {
-      this.changeSubscene(this.titleSubScene);
+      // this.changeSubscene(this.titleSubScene);
     });
 
     this.update.add(() => {

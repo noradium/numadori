@@ -2,8 +2,11 @@ import {SubScene} from './SubScene';
 import {BeatActionStatus} from '../component/GameManager';
 import {RoundedFilledRect} from '../component/RoundedFilledRect';
 import {MediumBlack64pxLabel, MediumWhite64pxLabel} from '../component/Label';
+import {Messenger} from '../component/Messenger';
+import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
+import {Util} from '../util/Util';
 
-enum HyoukaStamp {
+export enum HyoukaStamp {
   Perfect, HighLevel, DemoHeibon, Heibon
 }
 
@@ -13,15 +16,30 @@ export class ResultSubScene extends SubScene {
   private titleBackground: RoundedFilledRect;
   private titleLabel: g.Label;
   private hyoukaText: g.Label;
-  private hyoukaPerfectText: g.Label;
-  private hyoukaStampHighLevelText: g.Label;
+  private hyoukaPerfectText: g.Sprite;
+  private hyoukaStampHighLevelText: g.Sprite;
   private hyoukaStampDemoText: g.Label;
-  private hyoukaStampHeibonText: g.Label;
+  private hyoukaStampHeibonText: g.Sprite;
   private resultStates: BeatActionStatus[];
-  private hyouka?: {stamp: HyoukaStamp; message: string};
+  private hyouka?: {
+    stamp: HyoukaStamp;
+    message: string;
+    points: number;
+  };
+  private allResults: Array<{
+    playerId: string;
+    playerName: string;
+    states: BeatActionStatus[];
+    points: number;
+    hyouka: {
+      stamp: HyoukaStamp;
+    };
+  }> = [];
+  private messenger: Messenger;
 
-  constructor(_scene: g.Scene) {
+  constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
+    this.messenger = new Messenger(_scene);
   }
 
   init() {
@@ -50,7 +68,7 @@ export class ResultSubScene extends SubScene {
       fontSize: 24
     });
     this.titleLabel.x = (this.scene.game.width - this.titleLabel.width) / 2;
-    this.titleLabel.y = 50;
+    this.titleLabel.y = 54;
     this.append(this.titleLabel);
 
     this.hyoukaText = new MediumWhite64pxLabel({
@@ -62,46 +80,25 @@ export class ResultSubScene extends SubScene {
     this.hyoukaText.y = 140;
     this.append(this.hyoukaText);
 
-    this.hyoukaStampHighLevelText = new g.Label({
+    this.hyoukaStampHighLevelText = new g.Sprite({
       scene: this.scene,
-      text: 'ハイレベル',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 50
-      }),
-      fontSize: 50,
-      textColor: '#ffffff'
+      src: this.scene.assets['highlevel']
     });
     this.hyoukaStampHighLevelText.x = this.scene.game.width - this.hyoukaStampHighLevelText.width - 10;
     this.hyoukaStampHighLevelText.y = this.scene.game.height - this.hyoukaStampHighLevelText.height - 10;
     this.append(this.hyoukaStampHighLevelText);
 
-    this.hyoukaPerfectText = new g.Label({
+    this.hyoukaPerfectText = new g.Sprite({
       scene: this.scene,
-      text: 'パーフェクト',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 24
-      }),
-      fontSize: 24,
-      textColor: '#ffffff'
+      src: this.scene.assets['perfect']
     });
-    this.hyoukaPerfectText.x = this.scene.game.width - this.hyoukaPerfectText.width - 10;
-    this.hyoukaPerfectText.y = this.scene.game.height - this.hyoukaPerfectText.height - 10 - this.hyoukaStampHighLevelText.height;
+    this.hyoukaPerfectText.x = this.scene.game.width - this.hyoukaStampHighLevelText.width - 40;
+    this.hyoukaPerfectText.y = this.scene.game.height - this.hyoukaPerfectText.height - this.hyoukaStampHighLevelText.height + 10;
     this.append(this.hyoukaPerfectText);
 
-    this.hyoukaStampHeibonText = new g.Label({
+    this.hyoukaStampHeibonText = new g.Sprite({
       scene: this.scene,
-      text: '平凡',
-      font: new g.DynamicFont({
-        game: g.game,
-        fontFamily: g.FontFamily.Serif,
-        size: 50
-      }),
-      fontSize: 50,
-      textColor: '#ffffff'
+      src: this.scene.assets['heibon']
     });
     this.hyoukaStampHeibonText.x = this.scene.game.width - this.hyoukaStampHeibonText.width - 10;
     this.hyoukaStampHeibonText.y = this.scene.game.height - this.hyoukaStampHeibonText.height - 10;
@@ -117,36 +114,63 @@ export class ResultSubScene extends SubScene {
     this.append(this.hyoukaStampDemoText);
 
     this.hideContent();
+
+    this.messenger.onReceive('result', result => {
+      this.allResults.push(result);
+    });
   }
 
   setResult(states: BeatActionStatus[]) {
     this.resultStates = states;
     this.hyouka = this.calculateHyouka(states);
     // console.log(states, this.hyouka);
+    const me = this.playerJoiningManager.me();
+    if (me) {
+      this.messenger.send('result', {
+        playerId: me.id,
+        playerName: me.userName,
+        states: this.resultStates,
+        points: this.hyouka.points,
+        hyouka: {
+          stamp: this.hyouka.stamp
+        }
+      });
+    }
   }
 
   showContent() {
     this.background.show();
-    this.titleBackground.show();
-    this.titleLabel.show();
     this.hyoukaText.text = this.hyouka.message;
     this.hyoukaText.invalidate();
-    this.hyoukaText.show();
-    if (this.hyouka.stamp === HyoukaStamp.Perfect) {
-      this.hyoukaStampHighLevelText.show();
-      this.hyoukaPerfectText.show();
-    } else if (this.hyouka.stamp === HyoukaStamp.HighLevel) {
-      this.hyoukaStampHighLevelText.show();
-    } else if (this.hyouka.stamp === HyoukaStamp.DemoHeibon) {
-      this.hyoukaStampHeibonText.show();
-      this.hyoukaStampDemoText.show();
-    } else {
-      this.hyoukaStampHeibonText.show();
-    }
   }
 
   startContent() {
-    //
+    this.scene.setTimeout(() => {
+      this.titleBackground.show();
+      this.titleLabel.show();
+      Util.playAudio(this.scene, 'pi2');
+    }, 1000);
+    this.scene.setTimeout(() => {
+      this.hyoukaText.show();
+      Util.playAudio(this.scene, 'peta2');
+    }, 2500);
+    this.scene.setTimeout(() => {
+      if (this.hyouka.stamp === HyoukaStamp.Perfect) {
+        this.hyoukaStampHighLevelText.show();
+        this.hyoukaPerfectText.show();
+        Util.playAudio(this.scene, 'jingle_highlevel');
+      } else if (this.hyouka.stamp === HyoukaStamp.HighLevel) {
+        this.hyoukaStampHighLevelText.show();
+        Util.playAudio(this.scene, 'jingle_highlevel');
+      } else if (this.hyouka.stamp === HyoukaStamp.DemoHeibon) {
+        this.hyoukaStampHeibonText.show();
+        this.hyoukaStampDemoText.show();
+        Util.playAudio(this.scene, 'jingle_heibon');
+      } else {
+        this.hyoukaStampHeibonText.show();
+        Util.playAudio(this.scene, 'jingle_heibon');
+      }
+    }, 4000);
   }
 
   onUpdate() {
@@ -239,6 +263,7 @@ export class ResultSubScene extends SubScene {
     console.log(hyoukaStamp, hyoukaMessage);
 
     return {
+      points: points,
       stamp: hyoukaStamp,
       message: hyoukaMessage
     };
