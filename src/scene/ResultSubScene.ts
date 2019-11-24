@@ -5,6 +5,7 @@ import {MediumBlack64pxLabel, MediumWhite64pxLabel} from '../component/Label';
 import {Messenger} from '../component/Messenger';
 import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
 import {Util} from '../util/Util';
+import {MultiResult} from '../component/MultiResult';
 
 export enum HyoukaStamp {
   Perfect, HighLevel, DemoHeibon, Heibon
@@ -26,7 +27,7 @@ export class ResultSubScene extends SubScene {
     message: string;
     points: number;
   };
-  private allResults: Array<{
+  private allResults: {[playerId: string]: {
     playerId: string;
     playerName: string;
     states: BeatActionStatus[];
@@ -34,8 +35,9 @@ export class ResultSubScene extends SubScene {
     hyouka: {
       stamp: HyoukaStamp;
     };
-  }> = [];
+  }} = {};
   private messenger: Messenger;
+  private multiResult: MultiResult;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -116,15 +118,15 @@ export class ResultSubScene extends SubScene {
     this.hideContent();
 
     this.messenger.onReceive('result', result => {
-      this.allResults.push(result);
+      this.allResults[result.playerId] = result;
     });
   }
 
   setResult(states: BeatActionStatus[]) {
     this.resultStates = states;
     this.hyouka = this.calculateHyouka(states);
-    // console.log(states, this.hyouka);
     const me = this.playerJoiningManager.me();
+    console.log('setResult', states, this.hyouka, me);
     if (me) {
       this.messenger.send('result', {
         playerId: me.id,
@@ -171,6 +173,33 @@ export class ResultSubScene extends SubScene {
         Util.playAudio(this.scene, 'jingle_heibon');
       }
     }, 4000);
+    if (Util.isAtsumaruEnv()) {
+      this.scene.setTimeout(() => {
+        const savePromise = Util.saveScore(this.hyouka.points);
+        if (savePromise) {
+          savePromise.then(() => {
+            Util.showScoreboard();
+          });
+        }
+      }, 5500);
+    } else {
+      this.scene.setTimeout(() => {
+        const result = this.calculateMultiResult();
+        this.multiResult = new MultiResult({
+          scene: this.scene,
+          result
+        });
+        this.append(this.multiResult);
+        this.multiResult.slideDownIn();
+        this.multiResult.pointDown.add(() => {
+          if (this.multiResult.isShown()) {
+            this.multiResult.slideUpOut();
+          } else {
+            this.multiResult.slideDownIn();
+          }
+        });
+      }, 5500);
+    }
   }
 
   onUpdate() {
@@ -178,7 +207,7 @@ export class ResultSubScene extends SubScene {
   }
 
   stopContent() {
-    //
+    this.multiResult && this.multiResult.destroy();
   }
 
   hideContent() {
@@ -203,10 +232,10 @@ export class ResultSubScene extends SubScene {
       if (points === pointsPerfect) {
         return HyoukaStamp.Perfect;
       }
-      if (points > pointsPerfect - 6 && failedCount < 2) {
+      if (points > pointsPerfect - 10 && failedCount < 2) {
         return HyoukaStamp.HighLevel;
       }
-      if (points > pointsPerfect - 12) {
+      if (points > pointsPerfect - 20) {
         return HyoukaStamp.DemoHeibon;
       }
       return HyoukaStamp.Heibon;
@@ -277,7 +306,44 @@ export class ResultSubScene extends SubScene {
       case BeatActionStatus.Good:
         return 1;
       case BeatActionStatus.Fail:
-        return -2;
+        return -1;
     }
+  }
+
+  private calculateMultiResult() {
+    const masterId = this.playerJoiningManager.gameMasterPlayer().id;
+    const masterResult = this.allResults[masterId];
+    const distances: number[] = [];
+    Object.keys(this.allResults).forEach(id => {
+      const result = this.allResults[id];
+      if (result.playerId === masterId) {
+        return;
+      }
+      // 0 <= d <= 1
+      const d = result.states.reduce((prev, current, index) => {
+        const a = current === BeatActionStatus.Fail ? 0 : 1;
+        const b = masterResult.states[index] === BeatActionStatus.Fail ? 0 : 1;
+        return prev + (a - b) * (a - b);
+      }, 0) / result.states.length;
+      distances.push(d);
+    });
+    console.log('distances', distances);
+    const weight = 100 / (Object.keys(this.allResults).length - 1);
+    console.log('weight', weight);
+    const synchroPercentage = distances.reduce((prev, current) => {
+      return prev + (1 - current) * weight;
+    }, 0);
+    console.log('synchroPercentage', synchroPercentage);
+
+    const ranking = Object.keys(this.allResults).sort((ka, kb) => {
+      return this.allResults[kb].points - this.allResults[ka].points;
+    }).slice(0, 5).map(k => this.allResults[k]).map(result => ({
+      name: result.playerName,
+      hyouka: result.hyouka.stamp
+    }));
+    return {
+      synchroPercentage: Math.max(0, Math.min(100, Math.round(synchroPercentage))),
+      ranking
+    };
   }
 }

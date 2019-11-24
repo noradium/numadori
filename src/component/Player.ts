@@ -17,10 +17,12 @@ export class Player extends g.E {
   private failLabel: g.Sprite;
   private _currentStep: number;
   private disableSound: boolean;
+  private enableNumaTailSound: boolean;
   private timeline: Timeline;
   private highTopY: number;
   private topY: number;
   private bottomY: number;
+  private isMe: boolean;
 
   constructor(params: {
     scene: g.Scene;
@@ -29,6 +31,7 @@ export class Player extends g.E {
     x: number;
     y: number;
     disableSound?: boolean;
+    enableNumaTailSound?: boolean;
     isMe?: boolean;
   }) {
     super({
@@ -41,6 +44,8 @@ export class Player extends g.E {
     this.topY = params.y;
     this.bottomY = params.y + 3;
     this.disableSound = params.disableSound;
+    this.enableNumaTailSound = params.enableNumaTailSound;
+    this.isMe = params.isMe;
     this.tori1 = new g.Sprite({
       scene: params.scene,
       src: params.scene.assets['tori']
@@ -235,8 +240,9 @@ export class Player extends g.E {
     this.tori_tame1.hide();
     this.tori_jump1.show();
     this.tori_miss1.hide();
-    // numa_tail だけは disableAudio の例外。再生する
-    Util.playAudio(this.scene, 'numa_tail');
+    if (!this.disableSound || this.disableSound && this.enableNumaTailSound) {
+      Util.playAudio(this.scene, 'numa_tail');
+    }
     this.timeline.create(this, {modified: this.modified, destroyed: this.destroyed})
       .moveY(this.highTopY, 300, Easing.easeInOutExpo)
       .moveY(this.topY, 60, Easing.easeInOutExpo);

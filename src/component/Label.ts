@@ -11,6 +11,25 @@ export interface LabelParameterObject {
   opacity?: number;
 }
 
+export interface DynamicLabelParameterObject extends LabelParameterObject {
+  textColor?: string;
+}
+
+export class DynamicFontLabel extends g.Label {
+  constructor(
+    params: DynamicLabelParameterObject
+  ) {
+    super({
+      ...params,
+      font: new g.DynamicFont({
+        game: g.game,
+        fontFamily: g.FontFamily.Monospace,
+        size: 64
+      })
+    });
+  }
+}
+
 class Label extends g.Label {
   constructor(
     params: LabelParameterObject,

@@ -49,6 +49,7 @@ export class TeachingTap extends g.E {
     this.player = new Player({
       scene: this.scene,
       disableSound: true,
+      enableNumaTailSound: true,
       x: 0,
       y: this.yubi.y + this.yubi.height - 30
     });

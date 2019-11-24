@@ -61,6 +61,10 @@ export class PlayerJoiningManager {
     });
   }
 
+  gameMasterPlayer() {
+    return this.players[0];
+  }
+
   getGameMasterUserInfo() {
     if (!this.players[0] || this.players[0].id !== g.game.selfId) {
       return;

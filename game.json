@@ -523,7 +523,7 @@
 		},
 		"medium_white_64": {
 			"type": "image",
-			"width": 512,
+			"width": 1024,
 			"height": 512,
 			"path": "image/medium_white_64.png"
 		},
@@ -655,6 +655,22 @@
 			"width": 170,
 			"height": 49,
 			"path": "image/perfect.png"
+		},
+		"MultiResult": {
+			"type": "script",
+			"path": "script/component/MultiResult.js",
+			"global": true
+		},
+		"RankingNamePlate": {
+			"type": "script",
+			"path": "script/component/RankingNamePlate.js",
+			"global": true
+		},
+		"board": {
+			"type": "image",
+			"width": 600,
+			"height": 371,
+			"path": "image/board.png"
 		}
 	},
 	"environment": {

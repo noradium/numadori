@@ -20,7 +20,8 @@ function main(param: g.GameMainParameterObject): void {
       'numa_head', 'numa_tail', 'peta1', 'peta2', 'miss', 'don', 'pi',
       'great_icon', 'good_icon', 'fail_icon',
       'pi2', 'jingle_heibon', 'jingle_highlevel',
-      'heibon', 'highlevel', 'perfect'
+      'heibon', 'highlevel', 'perfect',
+      'board'
     ]
   });
   g.game.pushScene(scene);

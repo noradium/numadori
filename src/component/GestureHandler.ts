@@ -40,7 +40,7 @@ export class GestureHandler extends g.E {
         this.currentTempGesture = null;
         this.lastGesture = Gesture.Tap;
         this.onTap.fire();
-        // console.log('tap');
+        console.log(g.game.age, 'tap');
       }
     }, 100);
   }
@@ -49,7 +49,7 @@ export class GestureHandler extends g.E {
     if (this.currentTempGesture === Gesture.Tap) {
       this.lastGesture = Gesture.Tap;
       this.onTap.fire();
-      // console.log('tap in pointup');
+      console.log('tap in pointup');
     }
     if (this.lastGesture === Gesture.SlideDown || this.lastGesture === Gesture.SlideUp) {
       this.lastGesture = null;

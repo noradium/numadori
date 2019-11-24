@@ -125,7 +125,7 @@ export class GameManager extends g.E {
    * 確定した結果の beatIndex(小節中の何拍目か) を返します
    */
   action(action: UserAction): number | null {
-    // console.log('action', action);
+    console.log(g.game.age, 'action', action);
     const nearestIndex = (
       this.timeline[this.currentTimelineIndex].beatActionStatus === BeatActionStatus.Waiting &&
       this.timeline[this.currentTimelineIndex].beatAction !== BeatAction.Count &&
@@ -180,6 +180,7 @@ export class GameManager extends g.E {
   }
 
   private beatExec(timelineIndex: number) {
+    console.log(g.game.age, 'beatExec called');
     // システムアクションがあれば実行
     if (this.timeline[timelineIndex].systemAction) {
       this.timeline[timelineIndex].systemAction();
@@ -188,7 +189,7 @@ export class GameManager extends g.E {
       action: this.timeline[timelineIndex].beatAction,
       beatIndex: timelineIndex % this.beat
     });
-    console.log('beat!', timelineIndex, this.timeline[timelineIndex]);
+    console.log(g.game.age, 'beat!', timelineIndex, this.timeline[timelineIndex]);
   }
 
   private initializeTimeline(score: Score, startAge: number) {
@@ -203,7 +204,7 @@ export class GameManager extends g.E {
           beatActionStatus: BeatActionStatus.Waiting,
           systemAction: () => {
             if (bi === 0) {
-              console.log('playAudio', fragment.assetId);
+              console.log('playAudio', g.game.age, fragment.assetId);
               Util.playAudio(this.scene, fragment.assetId);
             }
             if (beatAction === BeatAction.Count) {

@@ -197,7 +197,8 @@ export class GameSubScene extends SubScene {
           name: p.userName,
           x: 100 + index * 100,
           y: 100,
-          isMe: p.id === this.scene.game.selfId
+          isMe: p.id === this.scene.game.selfId,
+          disableSound: p.id !== this.scene.game.selfId
         });
         this.players[p.id] = player;
         this.playersLayer.append(player);

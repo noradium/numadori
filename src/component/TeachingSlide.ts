@@ -50,6 +50,7 @@ export class TeachingSlide extends g.E {
     this.tori = new Player({
       scene: this.scene,
       disableSound: true,
+      enableNumaTailSound: true,
       x: 0,
       y: this.yubi.y + this.yubi.height - 30
     });
