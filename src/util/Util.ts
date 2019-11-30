@@ -1,7 +1,7 @@
 export class Util {
   static playAudio(scene: g.Scene, assetId: string) {
     (scene.assets[assetId] as g.AudioAsset).play();
-    console.log('play: ' + assetId, scene.assets[assetId]);
+    // console.log('play: ' + assetId, scene.assets[assetId]);
   }
 
   static stopAudio(scene: g.Scene, assetId: string) {
@@ -9,8 +9,8 @@ export class Util {
   }
 
   static isAtsumaruEnv() {
-    // return true;
-    return typeof window !== 'undefined' && typeof (window as any).RPGAtsumaru !== 'undefined';
+    return true;
+    // return typeof window !== 'undefined' && typeof (window as any).RPGAtsumaru !== 'undefined';
   }
 
   static saveScore(score: number): Promise<void> | void {

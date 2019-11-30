@@ -10,12 +10,14 @@ import {StopJoinButton} from '../component/StopJoinButton';
 import {Messenger} from '../component/Messenger';
 import {MediumBlack64pxLabel} from '../component/Label';
 import {StartButton} from '../component/StartButton';
-import {GameManager} from '../component/GameManager';
+import {GameManager, UserAction} from '../component/GameManager';
 import TutorialScore from '../score/TutorialScore';
 import {BeatAction} from '../score/BeatAction';
+import {RangeInput} from '../component/RangeInput';
+import {GestureHandler} from '../component/GestureHandler';
 
 export class WaitingRoomSubScene extends SubScene {
-  readonly onSceneEnd = new g.Trigger<void>();
+  readonly onSceneEnd = new g.Trigger<{timingOffset: number}>();
   private titleLabel: g.Label;
   private playerNumLabel: g.Label;
   private playerNumValueLabel: g.Label;
@@ -29,6 +31,10 @@ export class WaitingRoomSubScene extends SubScene {
   private messenger: Messenger;
   private timeline: Timeline;
   private manager: GameManager;
+  private timingRangeInputLabel: MediumBlack64pxLabel;
+  private timingRangeInputLabel2: MediumBlack64pxLabel;
+  private timingRangeInput: RangeInput;
+  private gestureHandler: GestureHandler;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -94,6 +100,20 @@ export class WaitingRoomSubScene extends SubScene {
     this.append(this.teachingTap);
     this.append(this.teachingSlide);
 
+    this.gestureHandler = new GestureHandler({
+      scene: this.scene
+    });
+    this.gestureHandler.onTap.add(event => {
+      this.setTimingOffset(UserAction.Click, event.fixDelay);
+    });
+    this.gestureHandler.onSlideDown.add(event => {
+      this.setTimingOffset(UserAction.SlideDown, event.fixDelay);
+    });
+    this.gestureHandler.onSlideUp.add(() => {
+      this.setTimingOffset(UserAction.SlideUp);
+    });
+    this.append(this.gestureHandler);
+
     this.stopJoinButton = new StopJoinButton({
       scene: this.scene
     });
@@ -126,14 +146,12 @@ export class WaitingRoomSubScene extends SubScene {
     this.atsumaruStartButton.x = this.scene.game.width - this.atsumaruStartButton.width - 20;
     this.atsumaruStartButton.y = this.scene.game.height - this.atsumaruStartButton.height - 20;
     this.atsumaruStartButton.pointUp.add(() => {
-      this.onSceneEnd.fire();
+      this.onSceneEnd.fire({timingOffset: this.timingRangeInput.getCurrentValue()});
     });
     this.append(this.atsumaruStartButton);
 
-    this.hideContent();
-
     this.messenger.onReceive('gameStart', () => {
-      this.onSceneEnd.fire();
+      this.onSceneEnd.fire({timingOffset: this.timingRangeInput.getCurrentValue()});
     });
 
     let pipyakoCount = 0;
@@ -177,6 +195,37 @@ export class WaitingRoomSubScene extends SubScene {
       }
       // not reached
     });
+
+    this.timingRangeInputLabel = new MediumBlack64pxLabel({
+      scene: this.scene,
+      text: 'タイミング調節',
+      fontSize: 18,
+      x: this.scene.game.width - 200 - 20,
+      y: this.scene.game.height - 200
+    });
+    this.append(this.timingRangeInputLabel);
+
+    this.timingRangeInputLabel2 = new MediumBlack64pxLabel({
+      scene: this.scene,
+      text: '(画面タップでも可)',
+      fontSize: 18,
+      x: this.scene.game.width - 200 - 20,
+      y: this.scene.game.height - 180
+    });
+    this.append(this.timingRangeInputLabel2);
+
+    this.timingRangeInput = new RangeInput({
+      scene: this.scene,
+      width: 200,
+      height: 40,
+      x: this.scene.game.width - 200 - 20,
+      y: this.scene.game.height - 140,
+      minValue: -15,
+      maxValue: 15
+    });
+    this.append(this.timingRangeInput);
+
+    this.hideContent();
   }
 
   showContent() {
@@ -198,6 +247,10 @@ export class WaitingRoomSubScene extends SubScene {
         this.joinButton.show();
       }
     }
+    this.timingRangeInput.show();
+    this.timingRangeInputLabel.show();
+    this.timingRangeInputLabel2.show();
+    this.gestureHandler.show();
   }
 
   startContent() {
@@ -252,5 +305,17 @@ export class WaitingRoomSubScene extends SubScene {
     this.joinButton.hide();
     this.stopJoinButton.hide();
     this.atsumaruStartButton.hide();
+    this.timingRangeInput.hide();
+    this.timingRangeInputLabel.hide();
+    this.timingRangeInputLabel2.hide();
+    this.gestureHandler.hide();
+  }
+
+  private setTimingOffset(action: UserAction, fixDelay?: number) {
+    Util.playAudio(this.scene, 'pi2');
+    const result = this.manager.action(action, fixDelay);
+    if (result && result.timingGap !== null && -15 <= result.timingGap && result.timingGap <= 15) {
+      this.timingRangeInput.setCurrentValue(-result.timingGap);
+    }
   }
 }

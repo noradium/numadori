@@ -72,7 +72,7 @@ export class MainScene extends g.Scene {
 
     this.waitingRoomSubScene = new WaitingRoomSubScene(this, this.playerJoiningManager);
     this.waitingRoomSubScene.init();
-    this.waitingRoomSubScene.onSceneEnd.add(() => this.onWaitingRoomSceneEnd());
+    this.waitingRoomSubScene.onSceneEnd.add((event) => this.onWaitingRoomSceneEnd(event));
     this.append(this.waitingRoomSubScene);
 
     this.gameSubScene = new GameSubScene(this, this.playerJoiningManager);
@@ -151,7 +151,8 @@ export class MainScene extends g.Scene {
     this.changeSubscene(this.waitingRoomSubScene);
   }
 
-  private onWaitingRoomSceneEnd() {
+  private onWaitingRoomSceneEnd(event: {timingOffset: number}) {
+    this.gameSubScene.setTimingOffset(event.timingOffset);
     this.gameSubScene.initPlayers();
     this.changeSubscene(this.gameSubScene);
   }

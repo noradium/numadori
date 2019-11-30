@@ -2,12 +2,17 @@ export enum Gesture {
   Tap, SlideDown, SlideUp
 }
 
+export interface GestureEvent {
+  fixDelay: number;
+}
+
 export class GestureHandler extends g.E {
-  readonly onTap: g.Trigger<void>;
+  readonly onTap: g.Trigger<GestureEvent>;
   readonly onTapUp: g.Trigger<void>;
-  readonly onSlideDown: g.Trigger<void>;
-  readonly onSlideUp: g.Trigger<void>;
+  readonly onSlideDown: g.Trigger<GestureEvent>;
+  readonly onSlideUp: g.Trigger<GestureEvent>;
   private currentTempGesture: Gesture;
+  private tempGestureTime: number;
   private lastGesture: Gesture;
 
   constructor(params: {
@@ -30,7 +35,9 @@ export class GestureHandler extends g.E {
   }
 
   private onPointDown(event: g.PointDownEvent) {
+    // console.log('pointdown', g.game.age);
     this.currentTempGesture = Gesture.Tap;
+    this.tempGestureTime = this.scene.game.age;
     this.scene.setTimeout(() => {
       if (
         this.currentTempGesture === Gesture.Tap &&
@@ -39,8 +46,8 @@ export class GestureHandler extends g.E {
       ) {
         this.currentTempGesture = null;
         this.lastGesture = Gesture.Tap;
-        this.onTap.fire();
-        console.log(g.game.age, 'tap');
+        this.onTap.fire({fixDelay: this.scene.game.age - this.tempGestureTime});
+        // console.log(g.game.age, 'tap');
       }
     }, 100);
   }
@@ -48,8 +55,8 @@ export class GestureHandler extends g.E {
   private onPointUp(event: g.PointUpEvent) {
     if (this.currentTempGesture === Gesture.Tap) {
       this.lastGesture = Gesture.Tap;
-      this.onTap.fire();
-      console.log('tap in pointup');
+      this.onTap.fire({fixDelay: this.scene.game.age - this.tempGestureTime});
+      // console.log('tap in pointup', g.game.age);
     }
     if (this.lastGesture === Gesture.SlideDown || this.lastGesture === Gesture.SlideUp) {
       this.lastGesture = null;
@@ -67,20 +74,20 @@ export class GestureHandler extends g.E {
       this.currentTempGesture === Gesture.Tap &&
       this.lastGesture !== Gesture.SlideDown &&
       this.lastGesture !== Gesture.SlideUp &&
-      event.startDelta.y > 8
+      event.startDelta.y > 10
     ) {
       this.currentTempGesture = null;
       this.lastGesture = Gesture.SlideDown;
-      this.onSlideDown.fire();
-      // console.log('slidedown');
+      this.onSlideDown.fire({fixDelay: this.scene.game.age - this.tempGestureTime});
+      // console.log('slidedown', g.game.age);
     } else if (
       this.lastGesture === Gesture.SlideDown &&
-      event.prevDelta.y < -5
+      event.prevDelta.y < -10
     ) {
       this.currentTempGesture = null;
       this.lastGesture = Gesture.SlideUp;
-      this.onSlideUp.fire();
-      // console.log('slideup');
+      this.onSlideUp.fire({fixDelay: 0});
+      // console.log('slideup', g.game.age);
     }
   }
 }

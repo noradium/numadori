@@ -8,6 +8,7 @@ export interface RoundedFilledRectParameterObject {
   circleAssetId: string;
   circleAssetSize: number;
   borderRadius: number;
+  touchable?: boolean;
 }
 
 export class RoundedFilledRect extends g.E {
@@ -24,7 +25,8 @@ export class RoundedFilledRect extends g.E {
       width: params.width,
       height: params.height,
       x: params.x,
-      y: params.y
+      y: params.y,
+      touchable: params.touchable
     });
     this.topBottomFilledRect = new g.FilledRect({
       scene: params.scene,

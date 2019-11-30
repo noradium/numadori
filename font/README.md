@@ -8,10 +8,10 @@
 
 ## black 64px
 ```js
-Object.keys(Array.from('あなた掛け声で下スライドして上スライドでジャンプ曲に合わせてタップみんなの声鳥の行進参加人数人1234567890 ').reduce((p, c) => {p[c] = true; return p;}, {})).join('')
+Object.keys(Array.from('あなた掛け声で下スライドして上スライドでジャンプ曲に合わせてタップみんなの声鳥の行進参加人数人1234567890 タイミング調節+-(画面タップでも可)').reduce((p, c) => {p[c] = true; return p;}, {})).join('')
 ```
-"0123456789あなた掛け声で下スライドして上ジャンプ曲に合わせタッみんの鳥行進参加人数 "
-bmpfont-generator --height 64 --chars "0123456789あなた掛け声で下スライドして上ジャンプ曲に合わせタッみんの鳥行進参加人数 " --fill "#0d0015" --json medium_black_64_glyph.json rounded-mplus-1mn-medium.ttf medium_black_64.png
+"0123456789あなた掛け声で下スライドして上ジャンプ曲に合わせタッみんの鳥行進参加人数 ミグ調節+-(画面も可)"
+bmpfont-generator --height 64 --chars "0123456789あなた掛け声で下スライドして上ジャンプ曲に合わせタッみんの鳥行進参加人数 ミグ調節+-(画面も可)" --fill "#0d0015" --json medium_black_64_glyph.json rounded-mplus-1mn-medium.ttf medium_black_64.png
 
 ## white 64px
 ```js

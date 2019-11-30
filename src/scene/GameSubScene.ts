@@ -46,18 +46,18 @@ export class GameSubScene extends SubScene {
     this.gestureHandler = new GestureHandler({
       scene: this.scene
     });
-    this.gestureHandler.onTap.add(() => {
+    this.gestureHandler.onTap.add(event => {
       // gestureHandler は local
-      const beatIndex = this.manager.action(UserAction.Click);
-      this.messenger.send('tap', {playerId: g.game.selfId, beatIndex});
+      const result = this.manager.action(UserAction.Click, event.fixDelay);
+      this.messenger.send('tap', {playerId: g.game.selfId, beatIndex: result ? result.beatIndex : 0});
     });
     this.gestureHandler.onTapUp.add(() => {
       // local
       this.messenger.send('tapUp', {playerId: g.game.selfId});
     });
-    this.gestureHandler.onSlideDown.add(() => {
+    this.gestureHandler.onSlideDown.add(event => {
       // local
-      this.manager.action(UserAction.SlideDown);
+      this.manager.action(UserAction.SlideDown, event.fixDelay);
       this.messenger.send('slideDown', {playerId: g.game.selfId});
     });
     this.gestureHandler.onSlideUp.add(() => {
@@ -176,6 +176,11 @@ export class GameSubScene extends SubScene {
       }
       targetPlayer.setMiss();
     });
+  }
+
+  setTimingOffset(timingOffset: number) {
+    console.log('setTimingOffset', timingOffset);
+    this.manager.setTimingOffset(timingOffset);
   }
 
   initPlayers() {

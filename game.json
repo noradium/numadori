@@ -671,6 +671,11 @@
 			"width": 600,
 			"height": 371,
 			"path": "image/board.png"
+		},
+		"RangeInput": {
+			"type": "script",
+			"path": "script/component/RangeInput.js",
+			"global": true
 		}
 	},
 	"environment": {

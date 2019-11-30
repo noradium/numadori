@@ -31,23 +31,24 @@ export class GameManager extends g.E {
   readonly onLastSomeMeasures: g.Trigger<{age: number}>;
   /**
    * ※ BB: 1拍の長さ
-   *              |    0.25 BB   |        0.3 BB      |
-   *              |       |0.15BB|   0.2 BB  |        |
+   *              |    0.25 BB   |        0.25 BB      |
+   *              |       |0.15BB|   0.15 BB |        |
    *   miss       | good  |    great         |  good  |  miss
    *              |       |      |           |        |
    * ----------------------------B-----------------------------
    *                           (↑Beat)
    */
-  private GREAT_MARGIN_FW = 0.20;
+  private GREAT_MARGIN_FW = 0.15;
   private GREAT_MARGIN_BW = 0.15;
   private GOOD_MARGIN_FW = 0.3;
-  private GOOD_MARGIN_BW = 0.25;
+  private GOOD_MARGIN_BW = 0.3;
   private score: Score;
   private loop: boolean;
   private timeline: Timeline;
   private agePerBeat: number;
   private beat: number;
   private currentTimelineIndex: number;
+  private timingOffset: number = 0;
 
   constructor(params: {
     scene: g.Scene;
@@ -67,6 +68,10 @@ export class GameManager extends g.E {
     this.onCount = new g.Trigger();
     this.onLastSomeMeasures = new g.Trigger();
     this.update.add(this.onUpdate.bind(this));
+  }
+
+  setTimingOffset(timingOffset: number) {
+    this.timingOffset = timingOffset;
   }
 
   start() {
@@ -93,7 +98,7 @@ export class GameManager extends g.E {
         this.timeline[this.currentTimelineIndex].beatAction === BeatAction.PiPyako
       )
     ) {
-      if (this.scene.game.age - this.timeline[this.currentTimelineIndex].age > this.agePerBeat * this.GOOD_MARGIN_FW) {
+      if (this.scene.game.age + this.timingOffset - this.timeline[this.currentTimelineIndex].age > this.agePerBeat * this.GOOD_MARGIN_FW) {
         console.log('超過 failed', this.currentTimelineIndex);
         this.timeline[this.currentTimelineIndex].beatActionStatus = BeatActionStatus.Fail;
         this.onBeatActionStatusFixed.fire({status: this.timeline[this.currentTimelineIndex].beatActionStatus});
@@ -117,15 +122,15 @@ export class GameManager extends g.E {
       });
       // このタイミングがループ後の1拍目なのでここでも beat時の処理を実行
       this.beatExec(this.currentTimelineIndex);
-      console.log('reset', this.timeline);
+      // console.log('reset', this.timeline);
     }
   }
 
   /**
-   * 確定した結果の beatIndex(小節中の何拍目か) を返します
+   * 確定した結果の beatIndex(小節中の何拍目か) と timingGap を返します
    */
-  action(action: UserAction): number | null {
-    console.log(g.game.age, 'action', action);
+  action(action: UserAction, fixDelay: number = 0): {beatIndex: number, status: BeatActionStatus, timingGap: number} | null {
+    console.log(g.game.age, 'action', action, fixDelay);
     const nearestIndex = (
       this.timeline[this.currentTimelineIndex].beatActionStatus === BeatActionStatus.Waiting &&
       this.timeline[this.currentTimelineIndex].beatAction !== BeatAction.Count &&
@@ -133,7 +138,7 @@ export class GameManager extends g.E {
     )
       ? this.currentTimelineIndex
       : this.currentTimelineIndex + 1;
-    // console.log('nearestIndex', nearestIndex);
+    console.log('nearestIndex', nearestIndex);
     if (!this.timeline[nearestIndex]) {
       return null;
     }
@@ -149,6 +154,7 @@ export class GameManager extends g.E {
 
     const isSlideDownExpected = this.timeline[nearestIndex - 2] && this.timeline[nearestIndex - 2].beatAction === BeatAction.PiPyako;
     const isSlideUpExpected = this.timeline[nearestIndex - 3] && this.timeline[nearestIndex - 3].beatAction === BeatAction.PiPyako;
+    let timingGap: number = null;
     if (
       // SlideDown であるべきだが間違い
       isSlideDownExpected && action !== UserAction.SlideDown ||
@@ -160,19 +166,26 @@ export class GameManager extends g.E {
       console.log('miss');
       this.timeline[nearestIndex].beatActionStatus = BeatActionStatus.Fail;
     } else {
-      const timingGap = this.scene.game.age - this.timeline[nearestIndex].age;
-      console.log('gap', timingGap);
+      timingGap = this.scene.game.age + this.timingOffset - this.timeline[nearestIndex].age - fixDelay;
+      console.log('gap', `${this.scene.game.age} + ${this.timingOffset} - ${this.timeline[nearestIndex].age} - ${fixDelay}`, timingGap);
       const status = (timingGap < 0 ? -this.agePerBeat * this.GREAT_MARGIN_BW < timingGap : timingGap < this.agePerBeat * this.GREAT_MARGIN_FW)
         ? BeatActionStatus.Great
         : (timingGap < 0 ? -this.agePerBeat * this.GOOD_MARGIN_BW < timingGap : timingGap < this.agePerBeat * this.GOOD_MARGIN_FW)
           ? BeatActionStatus.Good
-          : BeatActionStatus.Fail;
+          : BeatActionStatus.Waiting;
+      if (status === BeatActionStatus.Waiting) {
+        return null;
+      }
       this.timeline[nearestIndex].beatActionStatus = status;
     }
 
     this.onBeatActionStatusFixed.fire({status: this.timeline[nearestIndex].beatActionStatus});
-    console.log('onBeatActionStatusFixed', nearestIndex, action, this.timeline[nearestIndex].beatActionStatus);
-    return nearestIndex % 4;
+    // console.log('onBeatActionStatusFixed', nearestIndex, action, this.timeline[nearestIndex].beatActionStatus);
+    return {
+      beatIndex: nearestIndex % 4,
+      status: this.timeline[nearestIndex].beatActionStatus,
+      timingGap: timingGap
+    };
   }
 
   getStates() {
@@ -180,7 +193,7 @@ export class GameManager extends g.E {
   }
 
   private beatExec(timelineIndex: number) {
-    console.log(g.game.age, 'beatExec called');
+    // console.log(g.game.age, 'beatExec called');
     // システムアクションがあれば実行
     if (this.timeline[timelineIndex].systemAction) {
       this.timeline[timelineIndex].systemAction();
@@ -189,7 +202,7 @@ export class GameManager extends g.E {
       action: this.timeline[timelineIndex].beatAction,
       beatIndex: timelineIndex % this.beat
     });
-    console.log(g.game.age, 'beat!', timelineIndex, this.timeline[timelineIndex]);
+    // console.log(g.game.age, 'beat!', timelineIndex, this.timeline[timelineIndex]);
   }
 
   private initializeTimeline(score: Score, startAge: number) {
@@ -204,7 +217,7 @@ export class GameManager extends g.E {
           beatActionStatus: BeatActionStatus.Waiting,
           systemAction: () => {
             if (bi === 0) {
-              console.log('playAudio', g.game.age, fragment.assetId);
+              // console.log('playAudio', g.game.age, fragment.assetId);
               Util.playAudio(this.scene, fragment.assetId);
             }
             if (beatAction === BeatAction.Count) {
