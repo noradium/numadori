@@ -24,7 +24,8 @@ export class GameSubScene extends SubScene {
   private messenger: Messenger;
   private timeline: Timeline;
   private fadeOutOverlay: g.FilledRect;
-  private pipyakoCount = 0;
+  private companionPlayers: Player[] = [];
+  private companionPlayersLayer: g.E;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -41,6 +42,9 @@ export class GameSubScene extends SubScene {
       scene: this.scene
     });
     this.playersLayer = new g.E({
+      scene: this.scene
+    });
+    this.companionPlayersLayer = new g.E({
       scene: this.scene
     });
     this.gestureHandler = new GestureHandler({
@@ -74,6 +78,7 @@ export class GameSubScene extends SubScene {
     });
     this.append(this.background);
     this.append(this.manager);
+    this.append(this.companionPlayersLayer);
     this.append(this.playersLayer);
     // this.append(this.actionResultLabel);
     this.append(this.fadeOutOverlay);
@@ -129,10 +134,12 @@ export class GameSubScene extends SubScene {
         Object.keys(this.players).forEach(k => {
           this.players[k].setStep4();
         });
+        this.companionPlayers.forEach(p => p.setStep4());
       } else {
         Object.keys(this.players).forEach(k => {
           this.players[k].actionCount();
         });
+        this.companionPlayers.forEach(p => p.actionCount());
       }
     });
     this.manager.onBeatActionStatusFixed.add(event => {
@@ -157,8 +164,9 @@ export class GameSubScene extends SubScene {
     });
     this.manager.onLastSomeMeasures.add(event => {
       this.timeline.create(this.fadeOutOverlay, {modified: this.fadeOutOverlay.modified, destroyed: this.fadeOutOverlay.destroyed})
-        .to({opacity: 1}, 1000 * event.age / g.game.fps)
-        .wait(1500)
+        // 残り時間の 2/3 で完全に暗転
+        .to({opacity: 1}, 1000 * event.age * (2 / 3) / g.game.fps)
+        .wait(4000)
         .call(() => {
           this.onGameEnd.fire({
             states: this.manager.getStates()
@@ -167,7 +175,8 @@ export class GameSubScene extends SubScene {
     });
     this.manager.onBeat.add(event => {
       // beat
-      this.background.step(this.calculateStep(event.action));
+      this.background.step(this.calculateStep(event.expectedAction));
+      this.updateCompanionPlayers(event.expectedAction, event.beatIndex);
     });
     this.messenger.onReceive('miss', (event) => {
       const targetPlayer = this.players[event.playerId];
@@ -185,6 +194,21 @@ export class GameSubScene extends SubScene {
 
   initPlayers() {
     if (Util.isAtsumaruEnv()) {
+      [
+        {x: 100, y: 100},
+        {x: 200, y: 100},
+        {x: 400, y: 100}
+      ].forEach((params, index) => {
+        const p = new Player({
+          scene: this.scene,
+          id: `companion-${index}`,
+          x: params.x,
+          y: params.y,
+          disableSound: true
+        });
+        this.companionPlayers.push(p);
+        this.companionPlayersLayer.append(p);
+      });
       const player = new Player({
         scene: this.scene,
         id: this.scene.game.selfId,
@@ -229,6 +253,7 @@ export class GameSubScene extends SubScene {
     this.manager.show();
     this.gestureHandler.show();
     this.fadeOutOverlay.show();
+    this.companionPlayersLayer.show();
   }
 
   startContent() {
@@ -249,27 +274,46 @@ export class GameSubScene extends SubScene {
     this.manager.hide();
     this.gestureHandler.hide();
     this.fadeOutOverlay.hide();
+    this.companionPlayersLayer.hide();
   }
 
-  private calculateStep(beatAction: BeatAction) {
-    if (this.pipyakoCount > 0) {
-      this.pipyakoCount++;
+  private calculateStep(action: UserAction | null) {
+    switch (action) {
+      case UserAction.Click:
+        return 8;
+      case UserAction.SlideDown:
+        return 2;
+      case UserAction.SlideUp:
+        return 24;
+      default:
+        return 0;
     }
-    if (beatAction === BeatAction.PiPyako) {
-      this.pipyakoCount = 1;
-      return 8;
-    }
+  }
 
-    if (this.pipyakoCount === 3) {
-      return 2;
+  private updateCompanionPlayers(action: UserAction | null, beatIndex: number) {
+    switch (action) {
+      case UserAction.Click:
+        this.companionPlayers.forEach(p => {
+          switch (beatIndex) {
+            case 0:
+            case 2:
+              p.setStep1();
+              this.scene.setTimeout(() => p.setStep2(), 150);
+              break;
+            case 1:
+            case 3:
+              p.setStep3();
+              this.scene.setTimeout(() => p.setStep4(), 150);
+              break;
+          }
+        });
+        break;
+      case UserAction.SlideDown:
+        this.companionPlayers.forEach(p => p.setTame());
+        break;
+      case UserAction.SlideUp:
+        this.companionPlayers.forEach(p => p.setJump());
+        break;
     }
-    if (this.pipyakoCount === 4) {
-      this.pipyakoCount = 0;
-      return 24;
-    }
-    if (beatAction === BeatAction.Normal) {
-      return 8;
-    }
-    return 0;
   }
 }

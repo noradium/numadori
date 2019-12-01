@@ -150,7 +150,7 @@ export default {
       beatAction: [BeatAction.Normal, BeatAction.Normal, BeatAction.Normal, BeatAction.Normal]
     }, {
       assetId: 'music49',
-      beatAction: [BeatAction.Normal, BeatAction.Normal, BeatAction.Normal, BeatAction.Normal]
+      beatAction: [null, null, null, null]
     }
   ]
 };

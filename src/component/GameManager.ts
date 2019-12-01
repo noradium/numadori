@@ -18,7 +18,7 @@ type Timeline = Array<{
 }>;
 
 export class GameManager extends g.E {
-  readonly onBeat: g.Trigger<{action: BeatAction, beatIndex: number}>;
+  readonly onBeat: g.Trigger<{expectedAction: UserAction | null, beatIndex: number}>;
   /**
    * 各拍ごとのアクションが成功したか失敗したか確定したタイミングでemitされます
    * プレイヤーのクリック起因、時間経過起因で発生
@@ -64,7 +64,7 @@ export class GameManager extends g.E {
     });
     this.score = params.score;
     this.loop = !!params.loop;
-    this.onBeat = new g.Trigger<{action: BeatAction, beatIndex: number}>();
+    this.onBeat = new g.Trigger();
     this.onBeatActionStatusFixed = new g.Trigger<{status: BeatActionStatus}>();
     this.onCount = new g.Trigger();
     this.onLastSomeMeasures = new g.Trigger();
@@ -156,17 +156,9 @@ export class GameManager extends g.E {
       return null;
     }
 
-    const isSlideDownExpected = this.timeline[nearestIndex - 2] && this.timeline[nearestIndex - 2].beatAction === BeatAction.PiPyako;
-    const isSlideUpExpected = this.timeline[nearestIndex - 3] && this.timeline[nearestIndex - 3].beatAction === BeatAction.PiPyako;
+    const expectedAction = this.expectedAction(nearestIndex);
     let timingGap: number = null;
-    if (
-      // SlideDown であるべきだが間違い
-      isSlideDownExpected && action !== UserAction.SlideDown ||
-      // SlideUp であるべきだが間違い
-      isSlideUpExpected && action !== UserAction.SlideUp ||
-      // それ以外(Click)であるべきだが間違い
-      !isSlideDownExpected && !isSlideUpExpected && action !== UserAction.Click
-    ) {
+    if (expectedAction !== action) {
       // console.log('miss');
       this.timeline[nearestIndex].beatActionStatus = BeatActionStatus.Fail;
     } else {
@@ -196,6 +188,19 @@ export class GameManager extends g.E {
     return this.timeline.map(v => v.beatActionStatus);
   }
 
+  private expectedAction(timelineIndex: number): UserAction | null {
+    if (this.timeline[timelineIndex - 2] && this.timeline[timelineIndex - 2].beatAction === BeatAction.PiPyako) {
+      return UserAction.SlideDown;
+    }
+    if (this.timeline[timelineIndex - 3] && this.timeline[timelineIndex - 3].beatAction === BeatAction.PiPyako) {
+      return UserAction.SlideUp;
+    }
+    if (this.timeline[timelineIndex] && (this.timeline[timelineIndex].beatAction === BeatAction.Normal || this.timeline[timelineIndex].beatAction === BeatAction.PiPyako)) {
+      return UserAction.Click;
+    }
+    return null;
+  }
+
   private beatExec(timelineIndex: number) {
     // console.log(g.game.age, 'beatExec called');
     // システムアクションがあれば実行
@@ -203,7 +208,7 @@ export class GameManager extends g.E {
       this.timeline[timelineIndex].systemAction();
     }
     this.onBeat.fire({
-      action: this.timeline[timelineIndex].beatAction,
+      expectedAction: this.expectedAction(timelineIndex),
       beatIndex: timelineIndex % this.beat
     });
     // console.log(g.game.age, 'beat!', timelineIndex, this.timeline[timelineIndex]);

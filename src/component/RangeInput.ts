@@ -42,7 +42,8 @@ export class RangeInput extends g.E {
       cssColor: '#f0fbff',
       circleAssetId: 'lightblue_circle_32',
       circleAssetSize: 32,
-      touchable: true
+      touchable: true,
+      local: true
     });
     this.minusButtonText = new MediumBlack64pxLabel({
       scene: this.scene,
@@ -61,7 +62,8 @@ export class RangeInput extends g.E {
       cssColor: '#f0fbff',
       circleAssetId: 'lightblue_circle_32',
       circleAssetSize: 32,
-      touchable: true
+      touchable: true,
+      local: true
     });
     this.plusButtonText = new MediumBlack64pxLabel({
       scene: this.scene,

@@ -12,7 +12,6 @@ import {MediumBlack64pxLabel} from '../component/Label';
 import {StartButton} from '../component/StartButton';
 import {GameManager, UserAction} from '../component/GameManager';
 import TutorialScore from '../score/TutorialScore';
-import {BeatAction} from '../score/BeatAction';
 import {RangeInput} from '../component/RangeInput';
 import {GestureHandler} from '../component/GestureHandler';
 
@@ -29,7 +28,6 @@ export class WaitingRoomSubScene extends SubScene {
   private stopJoinButton: StopJoinButton;
   private atsumaruStartButton: StartButton;
   private messenger: Messenger;
-  private timeline: Timeline;
   private manager: GameManager;
   private timingRangeInputLabel: MediumBlack64pxLabel;
   private timingRangeInputLabel2: MediumBlack64pxLabel;
@@ -154,46 +152,26 @@ export class WaitingRoomSubScene extends SubScene {
       this.onSceneEnd.fire({timingOffset: this.timingRangeInput.getCurrentValue()});
     });
 
-    let pipyakoCount = 0;
     this.manager.onBeat.add(event => {
-      if (pipyakoCount > 0) {
-        pipyakoCount++;
+      switch (event.expectedAction) {
+        case UserAction.Click:
+          this.teachingTap.opacity = 1;
+          this.teachingSlide.opacity = 0.3;
+          this.teachingTap.modified();
+          this.teachingSlide.modified();
+          this.teachingTap.action(event.beatIndex);
+          return;
+        case UserAction.SlideDown:
+          this.teachingTap.opacity = 0.3;
+          this.teachingSlide.opacity = 1;
+          this.teachingTap.modified();
+          this.teachingSlide.modified();
+          this.teachingSlide.slideDown();
+          return;
+        case UserAction.SlideUp:
+          this.teachingSlide.slideUp();
+          return;
       }
-      if (event.action === BeatAction.PiPyako) {
-        pipyakoCount = 1;
-        // tap
-        this.teachingTap.opacity = 1;
-        this.teachingSlide.opacity = 0.3;
-        this.teachingTap.modified();
-        this.teachingSlide.modified();
-        this.teachingTap.action(event.beatIndex);
-        return;
-      }
-
-      if (pipyakoCount === 3) {
-        // しゃがみ
-        this.teachingTap.opacity = 0.3;
-        this.teachingSlide.opacity = 1;
-        this.teachingTap.modified();
-        this.teachingSlide.modified();
-        this.teachingSlide.slideDown();
-        return;
-      }
-      if (pipyakoCount === 4) {
-        pipyakoCount = 0;
-        // ジャンプ
-        this.teachingSlide.slideUp();
-        return;
-      }
-      if (event.action === BeatAction.Normal) {
-        // tap
-        this.teachingTap.opacity = 1;
-        this.teachingSlide.opacity = 0.3;
-        this.teachingTap.modified();
-        this.teachingSlide.modified();
-        this.teachingTap.action(event.beatIndex);
-      }
-      // not reached
     });
 
     this.timingRangeInputLabel = new MediumBlack64pxLabel({
