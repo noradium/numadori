@@ -49,6 +49,7 @@ export class GameManager extends g.E {
   private beat: number;
   private currentTimelineIndex: number;
   private timingOffset: number = 0;
+  private playingMusicAssetId: string;
 
   constructor(params: {
     scene: g.Scene;
@@ -82,6 +83,9 @@ export class GameManager extends g.E {
 
   stop() {
     this.timeline = null;
+    if (typeof this.playingMusicAssetId === 'string') {
+      Util.stopAudio(this.scene, this.playingMusicAssetId);
+    }
   }
 
   onUpdate() {
@@ -219,6 +223,7 @@ export class GameManager extends g.E {
             if (bi === 0) {
               // console.log('playAudio', g.game.age, fragment.assetId);
               Util.playAudio(this.scene, fragment.assetId);
+              this.playingMusicAssetId = fragment.assetId;
             }
             if (beatAction === BeatAction.Count) {
               Util.playAudio(this.scene, 'pi');
