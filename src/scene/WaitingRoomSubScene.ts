@@ -121,7 +121,7 @@ export class WaitingRoomSubScene extends SubScene {
     this.stopJoinButton.y = this.scene.game.height - this.stopJoinButton.height - 20;
     this.stopJoinButton.pointUp.add(() => {
       // only game master fire
-      console.log('stop join', this.playerJoiningManager.players);
+      // console.log('stop join', this.playerJoiningManager.players);
       this.messenger.send('gameStart', null);
     });
     this.append(this.stopJoinButton);
@@ -258,7 +258,7 @@ export class WaitingRoomSubScene extends SubScene {
     this.playerNumValueLabel.invalidate();
 
     this.playerJoiningManager.onPlayerJoin.add(event => {
-      console.log('onPlayerJoin', event.player, this.playerJoiningManager.players);
+      // console.log('onPlayerJoin', event.player, this.playerJoiningManager.players);
       this.playerNumValueLabel.text = `${this.playerJoiningManager.players.length}`;
       this.playerNumValueLabel.invalidate();
     });

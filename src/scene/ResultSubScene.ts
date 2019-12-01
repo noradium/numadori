@@ -126,7 +126,7 @@ export class ResultSubScene extends SubScene {
     this.resultStates = states;
     this.hyouka = this.calculateHyouka(states);
     const me = this.playerJoiningManager.me();
-    console.log('setResult', states, this.hyouka, me);
+    // console.log('setResult', states, this.hyouka, me);
     if (me) {
       this.messenger.send('result', {
         playerId: me.id,
@@ -227,7 +227,7 @@ export class ResultSubScene extends SubScene {
     }, 0);
     const points = states.reduce((prev, current) => prev + this.state2point(current), 0);
     const failedCount = states.filter(v => v === BeatActionStatus.Fail).length;
-    console.log(`result: ${points}/${pointsPerfect} (${failedCount} miss)`);
+    // console.log(`result: ${points}/${pointsPerfect} (${failedCount} miss)`);
     const hyoukaStamp = (() => {
       if (points === pointsPerfect) {
         return HyoukaStamp.Perfect;
@@ -289,7 +289,7 @@ export class ResultSubScene extends SubScene {
       // Heibon
       return 'もう少しがんばろう';
     })();
-    console.log(hyoukaStamp, hyoukaMessage);
+    // console.log(hyoukaStamp, hyoukaMessage);
 
     return {
       points: points,
@@ -327,13 +327,13 @@ export class ResultSubScene extends SubScene {
       }, 0) / result.states.length;
       distances.push(d);
     });
-    console.log('distances', distances);
+    // console.log('distances', distances);
     const weight = 100 / (Object.keys(this.allResults).length - 1);
-    console.log('weight', weight);
+    // console.log('weight', weight);
     const synchroPercentage = distances.reduce((prev, current) => {
       return prev + (1 - current) * weight;
     }, 0);
-    console.log('synchroPercentage', synchroPercentage);
+    // console.log('synchroPercentage', synchroPercentage);
 
     const ranking = Object.keys(this.allResults).sort((ka, kb) => {
       return this.allResults[kb].points - this.allResults[ka].points;

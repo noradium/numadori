@@ -179,7 +179,7 @@ export class GameSubScene extends SubScene {
   }
 
   setTimingOffset(timingOffset: number) {
-    console.log('setTimingOffset', timingOffset);
+    // console.log('setTimingOffset', timingOffset);
     this.manager.setTimingOffset(timingOffset);
   }
 

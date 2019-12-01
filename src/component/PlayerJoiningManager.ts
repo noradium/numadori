@@ -24,14 +24,14 @@ export class PlayerJoiningManager {
 
     this.messenger = new Messenger(scene);
     this.messenger.onReceive('join', event => {
-      console.log('on receive join', event);
+      // console.log('on receive join', event);
       if (!this.players.some(player => player.id === event.id)) {
         this.players.push(event);
         this.onPlayerJoin.fire({player: event});
       }
     });
     this.messenger.onReceive('getGameMasterUserInfo', event => {
-      console.log('on getGameMasterUserInfo', event);
+      // console.log('on getGameMasterUserInfo', event);
       this.players[0].userId = event.userId;
       this.players[0].userName = event.userName;
     });
@@ -50,7 +50,7 @@ export class PlayerJoiningManager {
 
   join() {
     g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
-      console.log('join', g.game.selfId);
+      // console.log('join', g.game.selfId);
       const userId = user ? user.id : g.game.selfId;
       const userName = user ? user.name : g.game.selfId;
       this.messenger.send('join', {
@@ -70,7 +70,7 @@ export class PlayerJoiningManager {
       return;
     }
     g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
-      console.log('getGameMasterUserInfo', g.game.selfId);
+      // console.log('getGameMasterUserInfo', g.game.selfId);
       const userId = user ? user.id : g.game.selfId;
       const userName = user ? user.name : g.game.selfId;
       this.messenger.send('getGameMasterUserInfo', {
@@ -101,7 +101,7 @@ export class PlayerJoiningManager {
     //   userName: null
     // });
     g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
-      console.log('master join', g.game.selfId);
+      // console.log('master join', g.game.selfId);
       const userId = user ? user.id : g.game.selfId;
       const userName = user ? user.name : g.game.selfId;
       this.messenger.send('join', {

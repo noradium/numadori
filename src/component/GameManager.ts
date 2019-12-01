@@ -103,7 +103,7 @@ export class GameManager extends g.E {
       )
     ) {
       if (this.scene.game.age + this.timingOffset - this.timeline[this.currentTimelineIndex].age > this.agePerBeat * this.GOOD_MARGIN_FW) {
-        console.log('超過 failed', this.currentTimelineIndex);
+        // console.log('超過 failed', this.currentTimelineIndex);
         this.timeline[this.currentTimelineIndex].beatActionStatus = BeatActionStatus.Fail;
         this.onBeatActionStatusFixed.fire({status: this.timeline[this.currentTimelineIndex].beatActionStatus});
       }
@@ -134,7 +134,7 @@ export class GameManager extends g.E {
    * 確定した結果の beatIndex(小節中の何拍目か) と timingGap を返します
    */
   action(action: UserAction, fixDelay: number = 0): {beatIndex: number, status: BeatActionStatus, timingGap: number} | null {
-    console.log(g.game.age, 'action', action, fixDelay);
+    // console.log(g.game.age, 'action', action, fixDelay);
     const nearestIndex = (
       this.timeline[this.currentTimelineIndex].beatActionStatus === BeatActionStatus.Waiting &&
       this.timeline[this.currentTimelineIndex].beatAction !== BeatAction.Count &&
@@ -142,7 +142,7 @@ export class GameManager extends g.E {
     )
       ? this.currentTimelineIndex
       : this.currentTimelineIndex + 1;
-    console.log('nearestIndex', nearestIndex);
+    // console.log('nearestIndex', nearestIndex);
     if (!this.timeline[nearestIndex]) {
       return null;
     }
@@ -167,11 +167,11 @@ export class GameManager extends g.E {
       // それ以外(Click)であるべきだが間違い
       !isSlideDownExpected && !isSlideUpExpected && action !== UserAction.Click
     ) {
-      console.log('miss');
+      // console.log('miss');
       this.timeline[nearestIndex].beatActionStatus = BeatActionStatus.Fail;
     } else {
       timingGap = this.scene.game.age + this.timingOffset - this.timeline[nearestIndex].age - fixDelay;
-      console.log('gap', `${this.scene.game.age} + ${this.timingOffset} - ${this.timeline[nearestIndex].age} - ${fixDelay}`, timingGap);
+      // console.log('gap', `${this.scene.game.age} + ${this.timingOffset} - ${this.timeline[nearestIndex].age} - ${fixDelay}`, timingGap);
       const status = (timingGap < 0 ? -this.agePerBeat * this.GREAT_MARGIN_BW < timingGap : timingGap < this.agePerBeat * this.GREAT_MARGIN_FW)
         ? BeatActionStatus.Great
         : (timingGap < 0 ? -this.agePerBeat * this.GOOD_MARGIN_BW < timingGap : timingGap < this.agePerBeat * this.GOOD_MARGIN_FW)
