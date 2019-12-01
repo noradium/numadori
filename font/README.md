@@ -26,6 +26,12 @@ Object.keys(Array.from('鳥の行進').reduce((p, c) => {p[c] = true; return p;}
 ```
 bmpfont-generator --height 128 --chars "鳥の行進" --fill "#0d0015" --json bold_black_128_glyph.json rounded-mplus-1mn-bold.ttf bold_black_128.png
 
+## white 128px
+```js
+Object.keys(Array.from('鳥の行進').reduce((p, c) => {p[c] = true; return p;}, {})).join('')
+```
+bmpfont-generator --height 128 --chars "鳥の行進" --fill "#ffffff" --json bold_white_128_glyph.json rounded-mplus-1mn-bold.ttf bold_white_128.png
+
 
 
 mv *.png ../image/; mv *.json ../text/;

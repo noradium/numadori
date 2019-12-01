@@ -8,7 +8,7 @@ function main(param: g.GameMainParameterObject): void {
       'opening',
       'medium_black_64', 'medium_black_64_glyph',
       'medium_white_64', 'medium_white_64_glyph',
-      'bold_black_128', 'bold_black_128_glyph',
+      'bold_white_128', 'bold_white_128_glyph',
       'lightblue_circle_32', 'red_circle_32', 'white_circle_32', 'gray_circle_32',
       'tori', 'tori2', 'tori3', 'tori4', 'tori_tame1', 'tori_jump1', 'tori_miss1', 'asiato',
       'tutorial1', 'tutorial2', 'tutorial3',

@@ -10,6 +10,7 @@ import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
 import {ResultSubScene} from './ResultSubScene';
 import {BeatActionStatus} from '../component/GameManager';
 import {Util} from '../util/Util';
+import {GameBackground} from '../component/GameBackground';
 
 export class MainScene extends g.Scene {
   private currentSubScene: SubScene;

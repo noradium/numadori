@@ -85,3 +85,11 @@ export class BoldBlack128pxLabel extends Label {
     });
   }
 }
+export class BoldWhite128pxLabel extends Label {
+  constructor(params: LabelParameterObject) {
+    super(params, {
+      image: 'bold_white_128',
+      glyph: 'bold_white_128_glyph'
+    });
+  }
+}

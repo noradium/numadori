@@ -676,6 +676,16 @@
 			"type": "script",
 			"path": "script/component/RangeInput.js",
 			"global": true
+		},
+		"bold_white_128": {
+			"type": "image",
+			"width": 512,
+			"height": 256,
+			"path": "image/bold_white_128.png"
+		},
+		"bold_white_128_glyph": {
+			"type": "text",
+			"path": "text/bold_white_128_glyph.json"
 		}
 	},
 	"environment": {
