@@ -18,7 +18,7 @@ function main(param: g.GameMainParameterObject): void {
       'music31', 'music32', 'music33', 'music34', 'music35', 'music36', 'music37', 'music38', 'music39', 'music40',
       'music41', 'music42', 'music43', 'music44', 'music45', 'music46', 'music47', 'music48', 'music49',
       'numa_head', 'numa_tail', 'peta1', 'peta2', 'miss', 'don', 'pi',
-      'great_icon', 'good_icon', 'fail_icon',
+      'great_icon', 'good_icon', 'fail_icon', 'mukaicon',
       'pi2', 'jingle_heibon', 'jingle_highlevel',
       'heibon', 'highlevel', 'perfect',
       'board'

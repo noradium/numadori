@@ -691,6 +691,12 @@
 			"type": "script",
 			"path": "script/component/NiconamaCampaign.js",
 			"global": true
+		},
+		"mukaicon": {
+			"type": "image",
+			"width": 64,
+			"height": 64,
+			"path": "image/mukaicon.png"
 		}
 	},
 	"environment": {

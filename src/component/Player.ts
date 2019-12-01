@@ -1,5 +1,5 @@
 import {Util} from '../util/Util';
-import {Easing, Timeline} from '@akashic-extension/akashic-timeline';
+import {Easing, Timeline, Tween} from '@akashic-extension/akashic-timeline';
 import {MediumBlack64pxLabel} from './Label';
 
 export class Player extends g.E {
@@ -15,6 +15,7 @@ export class Player extends g.E {
   private greatLabel: g.Sprite;
   private goodLabel: g.Sprite;
   private failLabel: g.Sprite;
+  private mukaIcon: g.Sprite;
   private _currentStep: number;
   private disableSound: boolean;
   private enableNumaTailSound: boolean;
@@ -24,6 +25,7 @@ export class Player extends g.E {
   private bottomY: number;
   private isMe: boolean;
   private withoutAnimation: boolean;
+  private mukaIconTween: Tween;
 
   constructor(params: {
     scene: g.Scene;
@@ -35,6 +37,7 @@ export class Player extends g.E {
     enableNumaTailSound?: boolean;
     isMe?: boolean;
     withoutAnimation?: boolean;
+    enableMukaIcon?: boolean;
   }) {
     super({
       scene: params.scene,
@@ -136,12 +139,22 @@ export class Player extends g.E {
       x: this.width - 30,
       y: 0
     });
-    // this.greatLabel.hide();
-    // this.goodLabel.hide();
-    // this.failLabel.hide();
     this.append(this.greatLabel);
     this.append(this.goodLabel);
     this.append(this.failLabel);
+
+    if (params.enableMukaIcon) {
+      this.mukaIcon = new g.Sprite({
+        scene: params.scene,
+        src: params.scene.assets['mukaicon'],
+        x: this.width - 60,
+        y: 0,
+        opacity: 0,
+        scaleX: 0.4,
+        scaleY: 0.4
+      });
+      this.append(this.mukaIcon);
+    }
 
     this.modified();
     this.setStep1();
@@ -302,6 +315,19 @@ export class Player extends g.E {
     this.timeline.create(targetEntity, {modified: targetEntity.modified, destroyed: targetEntity.destroyed})
       .fadeIn(50, Easing.easeOutCirc)
       .wait(120)
+      .fadeOut(50, Easing.easeOutCirc);
+  }
+
+  showMukaIcon() {
+    if (!this.mukaIcon) {
+      return;
+    }
+    if (this.mukaIconTween && !this.mukaIconTween.destroyed()) {
+      this.timeline.remove(this.mukaIconTween);
+    }
+    this.mukaIconTween = this.timeline.create(this.mukaIcon, {modified: this.mukaIcon.modified, destroyed: this.mukaIcon.destroyed})
+      .fadeIn(50, Easing.easeOutCirc)
+      .wait(1000)
       .fadeOut(50, Easing.easeOutCirc);
   }
 

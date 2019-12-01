@@ -158,6 +158,9 @@ export class GameSubScene extends SubScene {
           break;
         case BeatActionStatus.Fail:
           myPlayer.showFeedbackLabel('fail');
+          if (this.companionPlayers.length) {
+            this.companionPlayers.forEach(p => p.showMukaIcon());
+          }
           this.messenger.send('miss', {playerId: g.game.selfId});
           break;
       }
@@ -195,16 +198,17 @@ export class GameSubScene extends SubScene {
   initPlayers() {
     if (Util.isAtsumaruEnv()) {
       [
-        {x: 100, y: 100},
-        {x: 200, y: 100},
-        {x: 400, y: 100}
+        {x: 100, y: 100, enableMukaIcon: false},
+        {x: 200, y: 100, enableMukaIcon: false},
+        {x: 400, y: 100, enableMukaIcon: true}
       ].forEach((params, index) => {
         const p = new Player({
           scene: this.scene,
           id: `companion-${index}`,
           x: params.x,
           y: params.y,
-          disableSound: true
+          disableSound: true,
+          enableMukaIcon: params.enableMukaIcon
         });
         this.companionPlayers.push(p);
         this.companionPlayersLayer.append(p);
