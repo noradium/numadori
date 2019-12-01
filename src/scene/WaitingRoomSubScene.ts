@@ -14,6 +14,7 @@ import {GameManager, UserAction} from '../component/GameManager';
 import TutorialScore from '../score/TutorialScore';
 import {RangeInput} from '../component/RangeInput';
 import {GestureHandler} from '../component/GestureHandler';
+import {NiconamaCampaign} from '../component/NiconamaCampaign';
 
 export class WaitingRoomSubScene extends SubScene {
   readonly onSceneEnd = new g.Trigger<{timingOffset: number}>();
@@ -33,6 +34,7 @@ export class WaitingRoomSubScene extends SubScene {
   private timingRangeInputLabel2: MediumBlack64pxLabel;
   private timingRangeInput: RangeInput;
   private gestureHandler: GestureHandler;
+  private niconamaCampaign: NiconamaCampaign;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -53,6 +55,13 @@ export class WaitingRoomSubScene extends SubScene {
     this.titleLabel.x = 5;
     this.titleLabel.y = 5;
     this.append(this.titleLabel);
+
+    this.niconamaCampaign = new NiconamaCampaign({
+      scene: this.scene
+    });
+    this.niconamaCampaign.x = this.titleLabel.x + this.titleLabel.width + 10;
+    this.niconamaCampaign.y = 5;
+    this.append(this.niconamaCampaign);
 
     this.playerNumLabel = new MediumBlack64pxLabel({
       scene: this.scene,
@@ -208,6 +217,9 @@ export class WaitingRoomSubScene extends SubScene {
 
   showContent() {
     this.titleLabel.show();
+    if (Util.isAtsumaruEnv()) {
+      this.niconamaCampaign.show();
+    }
     if (!Util.isAtsumaruEnv()) {
       this.playerNumLabel.show();
       this.playerNumValueLabel.show();
@@ -275,6 +287,7 @@ export class WaitingRoomSubScene extends SubScene {
 
   hideContent() {
     this.titleLabel.hide();
+    this.niconamaCampaign.hide();
     this.playerNumLabel.hide();
     this.playerNumValueLabel.hide();
     this.teachingTap.hide();

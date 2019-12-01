@@ -686,6 +686,11 @@
 		"bold_white_128_glyph": {
 			"type": "text",
 			"path": "text/bold_white_128_glyph.json"
+		},
+		"NiconamaCampaign": {
+			"type": "script",
+			"path": "script/component/NiconamaCampaign.js",
+			"global": true
 		}
 	},
 	"environment": {
