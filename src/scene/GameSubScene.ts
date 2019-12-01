@@ -195,19 +195,31 @@ export class GameSubScene extends SubScene {
       this.players[this.scene.game.selfId] = player;
       this.playersLayer.append(player);
     } else {
+      let me: Player = null;
       this.playerJoiningManager.players.forEach((p, index) => {
+        const x = this.scene.game.random.get(20, this.scene.game.width - 120);
+        const y = this.scene.game.random.get(40, this.scene.game.height - 200);
+        const isMe = p.id === this.scene.game.selfId;
         const player = new Player({
           scene: this.scene,
           id: p.id,
           name: p.userName,
-          x: 100 + index * 100,
-          y: 100,
-          isMe: p.id === this.scene.game.selfId,
-          disableSound: p.id !== this.scene.game.selfId
+          x,
+          y,
+          isMe,
+          disableSound: !isMe
         });
         this.players[p.id] = player;
-        this.playersLayer.append(player);
+        if (isMe) {
+          // 最前面にするためあとでappend
+          me = player;
+        } else {
+          this.playersLayer.append(player);
+        }
       });
+      if (me) {
+        this.playersLayer.append(me);
+      }
     }
   }
 
