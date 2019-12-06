@@ -28,10 +28,6 @@ export class MainScene extends g.Scene {
   }
 
   private _onLoad() {
-    if (this.playerJoiningManager.isGameMaster()) {
-      this.playerJoiningManager.getGameMasterUserInfo();
-    }
-
     g.game.vars.gameState = { score: 0 };
 
     // loaded完了後、OperationEventを処理するため1 tick遅延させる
@@ -83,6 +79,7 @@ export class MainScene extends g.Scene {
 
     this.resultSubScene = new ResultSubScene(this, this.playerJoiningManager);
     this.resultSubScene.init();
+    this.resultSubScene.onSceneEnd.add(() => this.onResultSceneEnd());
     this.append(this.resultSubScene);
 
     // this.playerJoiningManager.join();
@@ -158,7 +155,7 @@ export class MainScene extends g.Scene {
     this.changeSubscene(this.gameSubScene);
   }
 
-  // private onBackToTitleRequested() {
-  //   this.changeSubscene(this.titleSubScene);
-  // }
+  private onResultSceneEnd() {
+    this.changeSubscene(this.waitingRoomSubScene);
+  }
 }

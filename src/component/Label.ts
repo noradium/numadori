@@ -9,6 +9,8 @@ export interface LabelParameterObject {
   x?: number;
   y?: number;
   opacity?: number;
+  touchable?: boolean;
+  local?: boolean;
 }
 
 export interface DynamicLabelParameterObject extends LabelParameterObject {
@@ -56,6 +58,8 @@ class Label extends g.Label {
       x: params.x,
       y: params.y,
       opacity: params.opacity,
+      touchable: params.touchable,
+      local: params.local,
       font
     });
   }

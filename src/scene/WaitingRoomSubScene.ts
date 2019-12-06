@@ -2,19 +2,20 @@ import {SubScene} from './SubScene';
 import {Util} from '../util/Util';
 import {TeachingTap} from '../component/TeachingTap';
 import {TeachingSlide} from '../component/TeachingSlide';
-import {Timeline} from '@akashic-extension/akashic-timeline';
 import {RoundedFilledRect} from '../component/RoundedFilledRect';
 import {PlayerJoiningManager} from '../component/PlayerJoiningManager';
 import {JoinButton} from '../component/JoinButton';
 import {StopJoinButton} from '../component/StopJoinButton';
 import {Messenger} from '../component/Messenger';
-import {MediumBlack64pxLabel} from '../component/Label';
+import {DynamicFontLabel, MediumBlack64pxLabel} from '../component/Label';
 import {StartButton} from '../component/StartButton';
 import {GameManager, UserAction} from '../component/GameManager';
 import TutorialScore from '../score/TutorialScore';
 import {RangeInput} from '../component/RangeInput';
 import {GestureHandler} from '../component/GestureHandler';
 import {NiconamaCampaign} from '../component/NiconamaCampaign';
+import {TextInput} from '../component/TextInput';
+import {Keyboard, KeyboardCommand} from '../component/Keyboard';
 
 export class WaitingRoomSubScene extends SubScene {
   readonly onSceneEnd = new g.Trigger<{timingOffset: number}>();
@@ -35,6 +36,9 @@ export class WaitingRoomSubScene extends SubScene {
   private timingRangeInput: RangeInput;
   private gestureHandler: GestureHandler;
   private niconamaCampaign: NiconamaCampaign;
+  private nameInputLabel: DynamicFontLabel;
+  private nameInput: TextInput;
+  private keyboard: Keyboard;
 
   constructor(_scene: g.Scene, private playerJoiningManager: PlayerJoiningManager) {
     super(_scene);
@@ -142,7 +146,8 @@ export class WaitingRoomSubScene extends SubScene {
       if (this.playerJoiningManager.isJoined()) {
         return;
       }
-      this.playerJoiningManager.join();
+      this.nameInput.setDisabled(true);
+      this.playerJoiningManager.join(this.nameInput.currentValue());
       this.joinButton.setJoined();
     });
     this.append(this.joinButton);
@@ -212,6 +217,52 @@ export class WaitingRoomSubScene extends SubScene {
     });
     this.append(this.timingRangeInput);
 
+    this.nameInput = new TextInput({
+      scene: this.scene,
+      width: 220,
+      height: 40,
+      maxLength: 8
+    });
+    this.nameInput.x = this.scene.game.width - this.nameInput.width - 20;
+    this.nameInput.y = 80;
+    this.nameInput.pointUp.add(() => {
+      this.keyboard.show();
+    });
+    this.append(this.nameInput);
+
+    this.nameInputLabel = new DynamicFontLabel({
+      scene: this.scene,
+      text: '名前',
+      fontSize: 20,
+      x: this.nameInput.x,
+      y: 50
+    });
+    this.append(this.nameInputLabel);
+
+    this.keyboard = new Keyboard({
+      scene: this.scene
+    });
+    this.keyboard.x = (this.scene.game.width - this.keyboard.width) / 2;
+    this.keyboard.y = this.scene.game.height - this.keyboard.height - 10;
+    this.keyboard.onKeyDown.add(event => {
+      Util.playAudio(this.scene, 'pi2');
+      switch (event.command) {
+        case KeyboardCommand.Input:
+          this.nameInput.updateValue(this.nameInput.currentValue() + event.value);
+          break;
+        case KeyboardCommand.Delete:
+          this.nameInput.updateValue(this.nameInput.currentValue().slice(0, this.nameInput.currentValue().length - 1));
+          break;
+        case KeyboardCommand.Enter:
+          this.keyboard.hide();
+          if (this.playerJoiningManager.isGameMaster()) {
+            this.playerJoiningManager.updateGameMasterUserName(this.nameInput.currentValue());
+          }
+          break;
+      }
+    });
+    this.append(this.keyboard);
+
     this.hideContent();
   }
 
@@ -223,6 +274,8 @@ export class WaitingRoomSubScene extends SubScene {
     if (!Util.isAtsumaruEnv()) {
       this.playerNumLabel.show();
       this.playerNumValueLabel.show();
+      this.nameInputLabel.show();
+      this.nameInput.show();
     }
     this.teachingTap.show();
     this.teachingSlide.show();
@@ -300,6 +353,9 @@ export class WaitingRoomSubScene extends SubScene {
     this.timingRangeInputLabel.hide();
     this.timingRangeInputLabel2.hide();
     this.gestureHandler.hide();
+    this.nameInput.hide();
+    this.nameInputLabel.hide();
+    this.keyboard.hide();
   }
 
   private setTimingOffset(action: UserAction, fixDelay?: number) {

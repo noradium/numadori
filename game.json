@@ -697,6 +697,16 @@
 			"width": 64,
 			"height": 64,
 			"path": "image/mukaicon.png"
+		},
+		"TextInput": {
+			"type": "script",
+			"path": "script/component/TextInput.js",
+			"global": true
+		},
+		"Keyboard": {
+			"type": "script",
+			"path": "script/component/Keyboard.js",
+			"global": true
 		}
 	},
 	"environment": {

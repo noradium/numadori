@@ -30,9 +30,10 @@ export class PlayerJoiningManager {
         this.onPlayerJoin.fire({player: event});
       }
     });
-    this.messenger.onReceive('getGameMasterUserInfo', event => {
-      // console.log('on getGameMasterUserInfo', event);
-      this.players[0].userId = event.userId;
+    this.messenger.onReceive('updateGameMasterUserName', event => {
+      if (this.players.length === 0) {
+        return;
+      }
       this.players[0].userName = event.userName;
     });
   }
@@ -48,35 +49,32 @@ export class PlayerJoiningManager {
     return this.players.some(player => player.id === g.game.selfId);
   }
 
-  join() {
-    g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
-      // console.log('join', g.game.selfId);
-      const userId = user ? user.id : g.game.selfId;
-      const userName = user ? user.name : g.game.selfId;
-      this.messenger.send('join', {
-        id: g.game.selfId,
-        userId,
-        userName
-      });
+  join(userName: string) {
+    this.messenger.send('join', {
+      id: g.game.selfId,
+      userId: g.game.selfId,
+      userName: userName
+    });
+    // g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
+    //   // console.log('join', g.game.selfId);
+    //   const userId = user ? user.id : g.game.selfId;
+    //   const userName = user ? user.name : g.game.selfId;
+    //   this.messenger.send('join', {
+    //     id: g.game.selfId,
+    //     userId,
+    //     userName
+    //   });
+    // });
+  }
+
+  updateGameMasterUserName(name: string) {
+    this.messenger.send('updateGameMasterUserName', {
+      userName: name
     });
   }
 
   gameMasterPlayer() {
     return this.players[0];
-  }
-
-  getGameMasterUserInfo() {
-    if (!this.players[0] || this.players[0].id !== g.game.selfId) {
-      return;
-    }
-    g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
-      // console.log('getGameMasterUserInfo', g.game.selfId);
-      const userId = user ? user.id : g.game.selfId;
-      const userName = user ? user.name : g.game.selfId;
-      this.messenger.send('getGameMasterUserInfo', {
-        userId, userName
-      });
-    });
   }
 
   me(): Player | null {
@@ -95,21 +93,27 @@ export class PlayerJoiningManager {
     if (event.player.id !== g.game.selfId) {
       return;
     }
+    this.messenger.send('join', {
+      id: g.game.selfId,
+      userId: g.game.selfId,
+      userName: 'ななし'
+    });
+
     // this.messenger.send('join', {
     //   id: g.game.selfId,
     //   userId: null,
     //   userName: null
     // });
-    g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
-      // console.log('master join', g.game.selfId);
-      const userId = user ? user.id : g.game.selfId;
-      const userName = user ? user.name : g.game.selfId;
-      this.messenger.send('join', {
-        id: g.game.selfId,
-        userId,
-        userName
-      });
-    });
+    // g.game.external.nico.getAccount((error: Error | null, user?: {id: string, name: string, premium: string | null}) => {
+    //   // console.log('master join', g.game.selfId);
+    //   const userId = user ? user.id : g.game.selfId;
+    //   const userName = user ? user.name : g.game.selfId;
+    //   this.messenger.send('join', {
+    //     id: g.game.selfId,
+    //     userId,
+    //     userName
+    //   });
+    // });
 
   }
 }

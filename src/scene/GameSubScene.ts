@@ -269,7 +269,15 @@ export class GameSubScene extends SubScene {
   }
 
   stopContent() {
-    //
+    this.fadeOutOverlay.opacity = 0;
+    this.companionPlayers.forEach(child => {
+      this.companionPlayersLayer.remove(child);
+    });
+    this.companionPlayers = [];
+    Object.keys(this.players).forEach(k => {
+      this.playersLayer.remove(this.players[k]);
+    });
+    this.players = {};
   }
 
   hideContent() {

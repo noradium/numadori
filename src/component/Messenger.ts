@@ -7,8 +7,7 @@ interface MessageType {
     userId: string;
     userName: string;
   };
-  getGameMasterUserInfo: {
-    userId: string;
+  updateGameMasterUserName: {
     userName: string;
   };
   gameStart: void;

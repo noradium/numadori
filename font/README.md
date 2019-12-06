@@ -15,10 +15,10 @@ bmpfont-generator --height 64 --chars "0123456789あなた掛け声で下スラ�
 
 ## white 64px
 ```js
-Object.keys(Array.from('スタート参加する参加済み参加締め切り完璧に歩けてたちゃんと歩けてた最初よくできてた中盤よくできてた最後よくできてたでも...もう少しがんばろうシンクロ率ランキング%1234567890パーフェクトハイレベルでも平凡位ニコ生対応').reduce((p, c) => {p[c] = true; return p;}, {})).join('')
+Object.keys(Array.from('スタート参加する参加済み参加締め切り完璧に歩けてたちゃんと歩けてた最初よくできてた中盤よくできてた最後よくできてたでも...もう少しがんばろうシンクロ率ランキング%1234567890パーフェクトハイレベルでも平凡位ニコ生対応<もういちど').reduce((p, c) => {p[c] = true; return p;}, {})).join('')
 ```
-"0123456789スタート参加する済み締め切り完璧に歩けてたちゃんと最初よくでき中盤後も.う少しがばろシンクロ率ラキグ%パフェハイレベル平凡位ニコ生対応"
-bmpfont-generator --height 64 --chars "0123456789スタート参加する済み締め切り完璧に歩けてたちゃんと最初よくでき中盤後も.う少しがばろシンクロ率ラキグ%パフェハイレベル平凡位ニコ生対応" --fill "#fff" --json medium_white_64_glyph.json rounded-mplus-1mn-medium.ttf medium_white_64.png
+"0123456789スタート参加する済み締め切り完璧に歩けてたちゃんと最初よくでき中盤後も.う少しがばろシンクロ率ラキグ%パフェハイレベル平凡位ニコ生対応<いど"
+bmpfont-generator --height 64 --chars "0123456789スタート参加する済み締め切り完璧に歩けてたちゃんと最初よくでき中盤後も.う少しがばろシンクロ率ラキグ%パフェハイレベル平凡位ニコ生対応<いど" --fill "#fff" --json medium_white_64_glyph.json rounded-mplus-1mn-medium.ttf medium_white_64.png
 
 ## black 128px
 ```js

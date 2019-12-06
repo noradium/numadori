@@ -12,7 +12,7 @@ export enum HyoukaStamp {
 }
 
 export class ResultSubScene extends SubScene {
-  readonly onTitleSceneEnd = new g.Trigger<void>();
+  readonly onSceneEnd = new g.Trigger<void>();
   private background: g.FilledRect;
   private titleBackground: RoundedFilledRect;
   private titleLabel: g.Label;
@@ -21,6 +21,7 @@ export class ResultSubScene extends SubScene {
   private hyoukaStampHighLevelText: g.Sprite;
   private hyoukaStampDemoText: g.Label;
   private hyoukaStampHeibonText: g.Sprite;
+  private retryButton: MediumWhite64pxLabel;
   private resultStates: BeatActionStatus[];
   private hyouka?: {
     stamp: HyoukaStamp;
@@ -115,6 +116,21 @@ export class ResultSubScene extends SubScene {
     this.hyoukaStampDemoText.y = this.scene.game.height - this.hyoukaStampHeibonText.height - 10;
     this.append(this.hyoukaStampDemoText);
 
+    if (Util.isAtsumaruEnv()) {
+      this.retryButton = new MediumWhite64pxLabel({
+        scene: this.scene,
+        text: '<<もういちど',
+        fontSize: 24,
+        touchable: true
+      });
+      this.retryButton.x = 20;
+      this.retryButton.y = this.scene.game.height - this.retryButton.height - 20;
+      this.retryButton.pointUp.add(() => {
+        this.onSceneEnd.fire();
+      });
+      this.append(this.retryButton);
+    }
+
     this.hideContent();
 
     this.messenger.onReceive('result', result => {
@@ -181,6 +197,7 @@ export class ResultSubScene extends SubScene {
             Util.showScoreboard();
           });
         }
+        this.retryButton && this.retryButton.show();
       }, 5500);
     } else {
       this.scene.setTimeout(() => {
@@ -219,6 +236,7 @@ export class ResultSubScene extends SubScene {
     this.hyoukaStampHeibonText.hide();
     this.hyoukaStampDemoText.hide();
     this.hyoukaPerfectText.hide();
+    this.retryButton && this.retryButton.hide();
   }
 
   private calculateHyouka(states: BeatActionStatus[]) {
